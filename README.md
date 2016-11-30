@@ -2,7 +2,7 @@
 
 ## Run Server
 
-`sudo cmake-build-debug/vpn_lab -i -tun0 -s -d`
+`sudo cmake-build-debug/vpn_lab -i tun0 -s -d`
 
 #### Setup IP for server
 
@@ -12,7 +12,7 @@
 
 ## Run Client
 
-`sudo cmake-build-debug/vpn_lab -i -tun0 -c <ip of server> -d`
+`sudo cmake-build-debug/vpn_lab -i tun0 -c <ip of server> -d`
 
 #### Setup IP for client
 

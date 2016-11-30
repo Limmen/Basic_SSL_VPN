@@ -279,8 +279,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    /**
+     * Assign local address
+     */
+    memset(&local_socket_info, 0,
+           sizeof(local_socket_info)); //copies sizeof(local_socket_info) number of 0's to &local_socket_info
+    local_socket_info.sin_family = AF_INET;
+    local_socket_info.sin_addr.s_addr = htonl(INADDR_ANY);
+    local_socket_info.sin_port = htons(port);
 
-    /* assign the destination address */
+    /**
+     * Assign remote address
+     */
     memset(&remote_socket_info, 0, sizeof(remote_socket_info));
     remote_socket_info.sin_family = AF_INET;
     remote_socket_info.sin_addr.s_addr = inet_addr(remote_ip);
@@ -289,10 +299,17 @@ int main(int argc, char *argv[]) {
     /* When created, the socket have no address, here we assign address pointed to by local_socket_info to socket
  * pointed to by filedescriptor sock_fd
  */
-    if (bind(sock_fd, (struct sockaddr *) &remote_socket_info, sizeof(remote_socket_info)) < 0) {
+    if (bind(sock_fd, (struct sockaddr *) &local_socket_info, sizeof(local_socket_info)) < 0) {
         perror("bind()");
         exit(1);
     }
+
+    /* connection request, connect systemcall */
+    if (connect(sock_fd, (struct sockaddr *) &remote_socket_info, sizeof(remote_socket_info)) < 0) {
+        perror("connect()");
+        exit(1);
+    }
+
     net_fd = sock_fd;
 
     /* use select() to handle two descriptors at once */
