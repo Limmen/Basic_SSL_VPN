@@ -272,76 +272,28 @@ int main(int argc, char *argv[]) {
     /**
      * Creates TCP socket for communication.
      * AF_INET = IPv4
-     * SOCK_STREAM = TCP stream connection
+     * SOCK_DGRAM = TCP stream connection
      */
-    if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("socket()");
         exit(1);
     }
 
-    if (cliserv == CLIENT) {
-        /* Client, try to connect to server */
 
-        /* assign the destination address */
-        memset(&remote_socket_info, 0, sizeof(remote_socket_info));
-        remote_socket_info.sin_family = AF_INET;
-        remote_socket_info.sin_addr.s_addr = inet_addr(remote_ip);
-        remote_socket_info.sin_port = htons(port);
+    /* assign the destination address */
+    memset(&remote_socket_info, 0, sizeof(remote_socket_info));
+    remote_socket_info.sin_family = AF_INET;
+    remote_socket_info.sin_addr.s_addr = inet_addr(remote_ip);
+    remote_socket_info.sin_port = htons(port);
 
-        /* connection request, connect systemcall */
-        if (connect(sock_fd, (struct sockaddr *) &remote_socket_info, sizeof(remote_socket_info)) < 0) {
-            perror("connect()");
-            exit(1);
-        }
-
-        net_fd = sock_fd;
-        do_debug("CLIENT: Connected to server %s\n", inet_ntoa(remote_socket_info.sin_addr));
-
-    } else {
-        /* Server, wait for connections */
-
-        /* avoid EADDRINUSE error on bind() */
-        if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &optval, sizeof(optval)) < 0) {
-            perror("setsockopt()");
-            exit(1);
-        }
-
-        memset(&local_socket_info, 0,
-               sizeof(local_socket_info)); //copies sizeof(local_socket_info) number of 0's to &local_socket_info
-        local_socket_info.sin_family = AF_INET;
-        local_socket_info.sin_addr.s_addr = htonl(INADDR_ANY);
-        local_socket_info.sin_port = htons(port);
-
-        /* When created, the socket have no address, here we assign address pointed to by local_socket_info to socket
-         * pointed to by filedescriptor sock_fd
-         */
-        if (bind(sock_fd, (struct sockaddr *) &local_socket_info, sizeof(local_socket_info)) < 0) {
-            perror("bind()");
-            exit(1);
-        }
-
-        /**
-         * listen() marks the socket as a passive socket, that will be used to accept incoming connection requests
-         */
-        if (listen(sock_fd, 5) < 0) {
-            perror("listen()");
-            exit(1);
-        }
-
-        /* wait for connection request */
-        remotelen = sizeof(remote_socket_info);
-        memset(&remote_socket_info, 0, remotelen); //initializes remote_socket_info to 0's
-        /**
-         * accept() system call to accept connections on the socket, returns new filedescriptor referring to the socket
-         * for the new connection
-         */
-        if ((net_fd = accept(sock_fd, (struct sockaddr *) &remote_socket_info, &remotelen)) < 0) {
-            perror("accept()");
-            exit(1);
-        }
-
-        do_debug("SERVER: Client connected from %s\n", inet_ntoa(remote_socket_info.sin_addr));
+    /* When created, the socket have no address, here we assign address pointed to by local_socket_info to socket
+ * pointed to by filedescriptor sock_fd
+ */
+    if (bind(sock_fd, (struct sockaddr *) &remote_socket_info, sizeof(remote_socket_info)) < 0) {
+        perror("bind()");
+        exit(1);
     }
+    net_fd = sock_fd;
 
     /* use select() to handle two descriptors at once */
     maxfd = (tap_fd > net_fd) ? tap_fd : net_fd;

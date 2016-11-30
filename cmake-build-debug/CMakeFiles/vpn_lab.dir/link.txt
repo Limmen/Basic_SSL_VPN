@@ -1,1 +1,1 @@
-/usr/bin/cc  -g   CMakeFiles/vpn_lab.dir/simpletun.c.o  -o vpn_lab 
+/usr/bin/cc  -g   CMakeFiles/vpn_lab.dir/simpletun_udp.c.o  -o vpn_lab 

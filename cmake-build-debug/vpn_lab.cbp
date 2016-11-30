@@ -84,7 +84,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun.c">
+		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun_udp.c">
 			<Option target="vpn_lab"/>
 		</Unit>
 		<Unit filename="/home/kim/workspace/c/vpn_lab/CMakeLists.txt">
