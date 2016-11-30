@@ -1,26 +1,6 @@
-/**************************************************************************
- * simpletun.c                                                            *
- *                                                                        *
- * A simplistic, simple-minded, naive tunnelling program using tun/tap    *
- * interfaces and TCP. Handles (badly) IPv4 for tun, ARP and IPv4 for     *
- * tap. DO NOT USE THIS PROGRAM FOR SERIOUS PURPOSES.                     *
- *                                                                        *
- * You have been warned.                                                  *
- *                                                                        *
- * (C) 2009 Davide Brini.                                                 *
- *                                                                        *
- * DISCLAIMER AND WARNING: this is all work in progress. The code is      *
- * ugly, the algorithms are naive, error checking and input validation    *
- * are very basic, and of course there can be bugs. If that's not enough, *
- * the program has not been thoroughly tested, so it might even fail at   *
- * the few simple things it should be supposed to do right.               *
- * Needless to say, I take no responsibility whatsoever for what the      *
- * program might do. The program has been written mostly for learning     *
- * purposes, and can be used in the hope that is useful, but everything   *
- * is to be taken "as is" and without any kind of warranty, implicit or   *
- * explicit. See the file LICENSE for further details.                    *
- *************************************************************************/
-
+/**
+ * derived from simpletun.c, to changed to use UDP instead of TCP
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -190,7 +170,6 @@ int main(int argc, char *argv[]) {
     int header_len = IP_HDR_LEN;
     int maxfd;
     uint16_t nread, nwrite, plength;
-//  uint16_t total_len, ethertype;
     char buffer[BUFSIZE];
     struct sockaddr_in local_socket_info, remote_socket_info;
     char remote_ip[16] = "";
@@ -268,11 +247,10 @@ int main(int argc, char *argv[]) {
 
     do_debug("Successfully connected to interface %s\n", if_name);
 
-    /*  */
     /**
-     * Creates TCP socket for communication.
+     * Creates UDP socket for communication.
      * AF_INET = IPv4
-     * SOCK_DGRAM = TCP stream connection
+     * SOCK_DGRAM = UDP datagram socket
      */
     if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("socket()");
@@ -280,7 +258,7 @@ int main(int argc, char *argv[]) {
     }
 
     /**
-     * Assign local address
+     * prepare local address of the socket
      */
     memset(&local_socket_info, 0,
            sizeof(local_socket_info)); //copies sizeof(local_socket_info) number of 0's to &local_socket_info
@@ -289,7 +267,7 @@ int main(int argc, char *argv[]) {
     local_socket_info.sin_port = htons(port);
 
     /**
-     * Assign remote address
+     * prepare remote address of the socket
      */
     memset(&remote_socket_info, 0, sizeof(remote_socket_info));
     remote_socket_info.sin_family = AF_INET;
@@ -297,14 +275,17 @@ int main(int argc, char *argv[]) {
     remote_socket_info.sin_port = htons(port);
 
     /* When created, the socket have no address, here we assign address pointed to by local_socket_info to socket
- * pointed to by filedescriptor sock_fd
- */
+     * pointed to by filedescriptor sock_fd
+     */
     if (bind(sock_fd, (struct sockaddr *) &local_socket_info, sizeof(local_socket_info)) < 0) {
         perror("bind()");
         exit(1);
     }
 
-    /* connection request, connect systemcall */
+    /**
+     * Connect udp socket to remote, note that since UDP is connectionless this simply configures the socket to send
+     * data by default to the remote address and to only receive from that address, no connection is established.
+     */
     if (connect(sock_fd, (struct sockaddr *) &remote_socket_info, sizeof(remote_socket_info)) < 0) {
         perror("connect()");
         exit(1);
