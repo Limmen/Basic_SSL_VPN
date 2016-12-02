@@ -51,3 +51,7 @@ fabric.properties
 # modules.xml
 # .idea/misc.xml
 # *.ipr
+
+##executables
+simpletun_udp
+simpletun_udp_no_encryption

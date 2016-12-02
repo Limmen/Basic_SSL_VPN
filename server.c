@@ -1,4 +1,5 @@
 #include "server.h"
+
 int verifyNumber(char *, char *);
 
 int server_secure_channel(int pipefd[2]) {
@@ -105,38 +106,25 @@ int server_secure_channel(int pipefd[2]) {
     free(str);
     str = X509_NAME_oneline(X509_get_issuer_name(server_cert), 0, 0);
     printf("Issuer: %s\n", str);
-    SSL_SESSION *session;
-    if(session->master_key != NULL) {
-        unsigned  char * master_key = session->master_key;
-        printf("master key not null \n");
-        printf("master key length: %i \n",session->master_key_length);
-        printf("Master key size: %i \n", (int) sizeof(master_key));
-        printf("ssl version: %i \n", session->ssl_version);
-        int i = 0;
-        for(i; i < sizeof(master_key); i++){
-            printf("%i", master_key[i]);
-        }
-        printf("\n");
-    }
-    else
-        printf("master key is null \n");
-    session = SSL_get_session(ssl);
 
     // generate the random number for the challenge
     srand((unsigned) time(NULL));
     sprintf(number, "%d", rand());
-
+    printf("Closing pipe read\n");
     close(pipefd[0]); // close the read-end of the pipe
+    printf("writing to pipe\n");
     write(pipefd[1], number, strlen(number));
+    char nullterminate[] = "\0";
+    write(pipefd[1], nullterminate, strlen(nullterminate));
     // send the random number to the client
-    printf("Sending the random number challenge to the client. Number is %s... ", number);
+    printf("Sending the random number challenge to the client. Number is %s... \n", number);
     if (BIO_write(sbio, number, strlen(number)) <= 0) {
         fprintf(stderr, "Error in sending random number\n");
         ERR_print_errors_fp(stderr);
         exit(1);
     }
     printf("SUCCESS!\n");
-    printf("while true..");
-    close(pipefd[0]);
     BIO_flush(sbio);
+    //close(pipefd[1]);
+    while(1){};
 }

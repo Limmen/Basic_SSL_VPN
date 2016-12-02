@@ -209,7 +209,6 @@ int main(int argc, char *argv[]) {
                 break;
             case 'r':
                 strncpy(remote_ip, optarg, 15);
-                do_debug("remote ip: %s", remote_ip);
                 break;
             case 'p':
                 port = atoi(optarg); //converts string optarg into integer
@@ -226,8 +225,6 @@ int main(int argc, char *argv[]) {
                 usage();
         }
     }
-
-    do_debug("Successfully parsed command_line args");
     /* optind is the index of the next element to be processed in argv */
 
     argv += optind;
@@ -293,7 +290,6 @@ int main(int argc, char *argv[]) {
         perror("bind()");
         exit(1);
     }
-
     /**
      * Connect udp socket to remote, note that since UDP is connectionless this simply configures the socket to send
      * data by default to the remote address and to only receive from that address, no connection is established.
@@ -302,9 +298,7 @@ int main(int argc, char *argv[]) {
         perror("connect()");
         exit(1);
     }
-
     net_fd = sock_fd;
-
     /* use select() to handle two descriptors at once */
     maxfd = (tap_fd > net_fd) ? tap_fd : net_fd;
     int pipefd[2];
@@ -323,6 +317,7 @@ int main(int argc, char *argv[]) {
     }
     close(pipefd[1]); //close write-end of pipe
     maxfd = (pipefd[0] > maxfd) ? pipefd[0] : maxfd;
+    int pipeClosed = 1;
     while (1) {
         char buf[500];
         int ret;
@@ -331,7 +326,10 @@ int main(int argc, char *argv[]) {
         FD_ZERO(&rd_set); //FD_ZERO is a macro that clears the fd-set
         FD_SET(tap_fd, &rd_set); //Adds fd tap_fd to the set
         FD_SET(net_fd, &rd_set); //Adds net_fd to the set
-        FD_SET(pipefd[0], &rd_set);
+        if (pipeClosed != 0) {
+            FD_SET(pipefd[0], &rd_set);
+        }
+
 
         /**
          * Monitors filedescriptors to know when they are ready for I/O, uses no timeout (NULL), first argument is
@@ -429,9 +427,13 @@ int main(int argc, char *argv[]) {
         }
         if (FD_ISSET(pipefd[0], &rd_set)) {
             int n;
-            printf("pipefd is set \n");
             n = read(pipefd[0], buf, sizeof(buf));
-            printf("read: %s from tcp process \n", buf);
+            if (n == 0) {
+                do_debug("Pipe to secure TCP channel, closed");
+                pipeClosed = 0;
+            }
+            do_debug("read: %s from tcp process \n", buf);
+
         }
     }
     return (0);
