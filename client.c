@@ -101,6 +101,8 @@ int client_secure_channel(int pipefd[2]) {
     printf("SUCCESS!\nRandom number is: %s\n", number);
     close(pipefd[0]); // close the read-end of the pipe
     write(pipefd[1], number, strlen(number));
+    //close(pipefd[0])
+    while(1){};
 }
 
   

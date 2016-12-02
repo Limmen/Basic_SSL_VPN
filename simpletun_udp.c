@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
     initializeSSL();
 
     /* Check command line options getopt function goes through the command line args with preceeding "-" or "--" */
-    while ((option = getopt(argc, argv, "i:sc:p:uahd")) > 0) {
+    while ((option = getopt(argc, argv, "i:sc:p:r:uahd")) > 0) {
         switch (option) {
             case 'd':
                 debug = 1;
@@ -206,6 +206,8 @@ int main(int argc, char *argv[]) {
                 break;
             case 'c':
                 cliserv = CLIENT;
+                break;
+            case 'r':
                 strncpy(remote_ip, optarg, 15);
                 break;
             case 'p':
@@ -224,6 +226,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    do_debug("Successfully parsed command_line args");
     /* optind is the index of the next element to be processed in argv */
     argv += optind;
     argc -= optind;
