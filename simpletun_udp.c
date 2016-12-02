@@ -8,20 +8,14 @@
 #include <sys/socket.h>
 #include <linux/if.h>
 #include <linux/if_tun.h>
-#include <sys/types.h>
 #include <sys/ioctl.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <arpa/inet.h>
-#include <sys/select.h>
-#include <sys/time.h>
 #include <errno.h>
 #include <stdarg.h>
-#include <openssl/conf.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
-#include <string.h>
-
+#include "ssl_util.h"
+#include "server.h"
+#include "client.h"
 /* buffer for reading from tun/tap interface, must be >= 1500 */
 #define BUFSIZE 4000
 #define CLIENT 0
@@ -111,7 +105,7 @@ int cwrite(int fd, char *buf, int n) {
     int nwrite;
 
     if ((nwrite = write(fd, buf, n)) < 0) {
-        do_debug("Error code: %i \n" , nwrite);
+        do_debug("Error code: %i \n", nwrite);
         perror("Writing data");
         exit(1);
     }
@@ -166,105 +160,6 @@ void usage(void) {
     fprintf(stderr, "-d: outputs debug information while running\n");
     fprintf(stderr, "-h: prints this help text\n");
     exit(1);
-}
-
-void initializeSSL() {
-    ERR_load_crypto_strings();
-    OpenSSL_add_all_algorithms();
-    OPENSSL_config(NULL);
-}
-
-void handleErrors(void) {
-    ERR_print_errors_fp(stderr);
-    do_debug("Handle errors\n");
-    abort();
-}
-
-int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *ciphertext) {
-    EVP_CIPHER_CTX *ctx;
-
-    int len;
-
-    int ciphertext_len;
-
-    /* Create and initialise the context */
-    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
-
-    /* Initialise the encryption operation. IMPORTANT - ensure you use a key
-     * and IV size appropriate for your cipher
-     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
-     * IV size for *most* modes is the same as the block size. For AES this
-     * is 128 bits */
-    if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-        handleErrors();
-
-    /* Provide the message to be encrypted, and obtain the encrypted output.
-     * EVP_EncryptUpdate can be called multiple times if necessary
-     */
-    if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
-        handleErrors();
-    ciphertext_len = len;
-
-    /* Finalise the encryption. Further ciphertext bytes may be written at
-     * this stage.
-     */
-    if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) handleErrors();
-    ciphertext_len += len;
-
-    /* Clean up */
-    EVP_CIPHER_CTX_free(ctx);
-
-    return ciphertext_len;
-}
-
-int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext) {
-    do_debug("Inside decrypt method \n");
-    EVP_CIPHER_CTX *ctx;
-
-    int len;
-
-    int plaintext_len;
-
-    /* Create and initialise the context */
-    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
-
-    do_debug("CTX initializes without error \n");
-
-    /* Initialise the decryption operation. IMPORTANT - ensure you use a key
-     * and IV size appropriate for your cipher
-     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
-     * IV size for *most* modes is the same as the block size. For AES this
-     * is 128 bits */
-    if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-        handleErrors();
-
-    do_debug("EVP decrypt initialized without error \n");
-
-    /* Provide the message to be decrypted, and obtain the plaintext output.
-     * EVP_DecryptUpdate can be called multiple times if necessary
-     */
-    int ret = EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len);
-    do_debug("Return from DecryptUpdate is: %i \n");
-    if (1 != ret)
-        handleErrors();
-    plaintext_len = len;
-
-    do_debug("decryptUpdate done without error \n");
-
-    /* Finalise the decryption. Further plaintext bytes may be written at
-     * this stage.
-     */
-    if (1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len)) handleErrors();
-    plaintext_len += len;
-
-    do_debug("DecryptFinal done without error \n");
-
-    /* Clean up */
-    EVP_CIPHER_CTX_free(ctx);
-
-    return plaintext_len;
 }
 
 int main(int argc, char *argv[]) {
@@ -407,14 +302,31 @@ int main(int argc, char *argv[]) {
 
     /* use select() to handle two descriptors at once */
     maxfd = (tap_fd > net_fd) ? tap_fd : net_fd;
-
+    int pipefd[2];
+    pid_t cpid;
+    pipe(pipefd); // create the pipe
+    cpid = fork();
+    if (cliserv == CLIENT) {
+        if (cpid == 0) {
+            client_secure_channel(pipefd);
+        }
+    }
+    if (cliserv == SERVER) {
+        if (cpid == 0) {
+            server_secure_channel(pipefd);
+        }
+    }
+    close(pipefd[1]); //close write-end of pipe
+    maxfd = (pipefd[0] > maxfd) ? pipefd[0] : maxfd;
     while (1) {
+        char buf[500];
         int ret;
         fd_set rd_set; //file descriptor set
 
         FD_ZERO(&rd_set); //FD_ZERO is a macro that clears the fd-set
         FD_SET(tap_fd, &rd_set); //Adds fd tap_fd to the set
         FD_SET(net_fd, &rd_set); //Adds net_fd to the set
+        FD_SET(pipefd[0], &rd_set);
 
         /**
          * Monitors filedescriptors to know when they are ready for I/O, uses no timeout (NULL), first argument is
@@ -507,9 +419,14 @@ int main(int argc, char *argv[]) {
             do_debug("Decrypted text is:%s\n", decryptedtext);
 
             /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
-            plength = htons(decryptedtext_len);
-            nwrite = cwrite(tap_fd, decryptedtext, ntohs(decryptedtext_len));
+            nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
             do_debug("NET2TAP %lu: Written %d bytes to the tap interface\n", net2tap, nwrite);
+        }
+        if (FD_ISSET(pipefd[0], &rd_set)) {
+            int n;
+            printf("pipefd is set \n");
+            n = read(pipefd[0], buf, sizeof(buf));
+            printf("read: %s from tcp process \n", buf);
         }
     }
     return (0);
