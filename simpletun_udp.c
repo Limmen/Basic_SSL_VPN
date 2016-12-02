@@ -17,9 +17,13 @@
 #include <sys/time.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
+#include <string.h>
 
 /* buffer for reading from tun/tap interface, must be >= 1500 */
-#define BUFSIZE 2000
+#define BUFSIZE 4000
 #define CLIENT 0
 #define SERVER 1
 #define PORT 55555
@@ -31,6 +35,21 @@
 
 int debug;
 char *progname;
+
+
+/**************************************************************************
+ * do_debug: prints debugging stuff (doh!)                                *
+ **************************************************************************/
+void do_debug(char *msg, ...) {
+
+    va_list argp;
+
+    if (debug) {
+        va_start(argp, msg);
+        vfprintf(stderr, msg, argp);
+        va_end(argp);
+    }
+}
 
 /**************************************************************************
  * tun_alloc: allocates or reconnects to a tun/tap device. The caller     *
@@ -92,6 +111,7 @@ int cwrite(int fd, char *buf, int n) {
     int nwrite;
 
     if ((nwrite = write(fd, buf, n)) < 0) {
+        do_debug("Error code: %i \n" , nwrite);
         perror("Writing data");
         exit(1);
     }
@@ -115,20 +135,6 @@ int read_n(int fd, char *buf, int n) {
         }
     }
     return n;
-}
-
-/**************************************************************************
- * do_debug: prints debugging stuff (doh!)                                *
- **************************************************************************/
-void do_debug(char *msg, ...) {
-
-    va_list argp;
-
-    if (debug) {
-        va_start(argp, msg);
-        vfprintf(stderr, msg, argp);
-        va_end(argp);
-    }
 }
 
 /**************************************************************************
@@ -162,6 +168,105 @@ void usage(void) {
     exit(1);
 }
 
+void initializeSSL() {
+    ERR_load_crypto_strings();
+    OpenSSL_add_all_algorithms();
+    OPENSSL_config(NULL);
+}
+
+void handleErrors(void) {
+    ERR_print_errors_fp(stderr);
+    do_debug("Handle errors\n");
+    abort();
+}
+
+int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
+            unsigned char *iv, unsigned char *ciphertext) {
+    EVP_CIPHER_CTX *ctx;
+
+    int len;
+
+    int ciphertext_len;
+
+    /* Create and initialise the context */
+    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+
+    /* Initialise the encryption operation. IMPORTANT - ensure you use a key
+     * and IV size appropriate for your cipher
+     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
+     * IV size for *most* modes is the same as the block size. For AES this
+     * is 128 bits */
+    if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+        handleErrors();
+
+    /* Provide the message to be encrypted, and obtain the encrypted output.
+     * EVP_EncryptUpdate can be called multiple times if necessary
+     */
+    if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
+        handleErrors();
+    ciphertext_len = len;
+
+    /* Finalise the encryption. Further ciphertext bytes may be written at
+     * this stage.
+     */
+    if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) handleErrors();
+    ciphertext_len += len;
+
+    /* Clean up */
+    EVP_CIPHER_CTX_free(ctx);
+
+    return ciphertext_len;
+}
+
+int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
+            unsigned char *iv, unsigned char *plaintext) {
+    do_debug("Inside decrypt method \n");
+    EVP_CIPHER_CTX *ctx;
+
+    int len;
+
+    int plaintext_len;
+
+    /* Create and initialise the context */
+    if (!(ctx = EVP_CIPHER_CTX_new())) handleErrors();
+
+    do_debug("CTX initializes without error \n");
+
+    /* Initialise the decryption operation. IMPORTANT - ensure you use a key
+     * and IV size appropriate for your cipher
+     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
+     * IV size for *most* modes is the same as the block size. For AES this
+     * is 128 bits */
+    if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+        handleErrors();
+
+    do_debug("EVP decrypt initialized without error \n");
+
+    /* Provide the message to be decrypted, and obtain the plaintext output.
+     * EVP_DecryptUpdate can be called multiple times if necessary
+     */
+    int ret = EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len);
+    do_debug("Return from DecryptUpdate is: %i \n");
+    if (1 != ret)
+        handleErrors();
+    plaintext_len = len;
+
+    do_debug("decryptUpdate done without error \n");
+
+    /* Finalise the decryption. Further plaintext bytes may be written at
+     * this stage.
+     */
+    if (1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len)) handleErrors();
+    plaintext_len += len;
+
+    do_debug("DecryptFinal done without error \n");
+
+    /* Clean up */
+    EVP_CIPHER_CTX_free(ctx);
+
+    return plaintext_len;
+}
+
 int main(int argc, char *argv[]) {
 
     int tap_fd, option; //tap_fd will be either referring to a TAP or TUN interface, depending on user parameters
@@ -178,8 +283,15 @@ int main(int argc, char *argv[]) {
     socklen_t remotelen;
     int cliserv = -1;    /* must be specified on cmd line */
     unsigned long int tap2net = 0, net2tap = 0;
-
     progname = argv[0];
+
+    /* A 256 bit key */
+    unsigned char *key = (unsigned char *) "01234567890123456789012345678901";
+
+    /* A 128 bit IV */
+    unsigned char *iv = (unsigned char *) "01234567890123456";
+
+    initializeSSL();
 
     /* Check command line options getopt function goes through the command line args with preceeding "-" or "--" */
     while ((option = getopt(argc, argv, "i:sc:p:uahd")) > 0) {
@@ -322,6 +434,8 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
+        int decryptedtext_len, ciphertext_len;
+
         /**
          * ret is the number of fd's that are ready for IO, and rd_set now contain those fd's,
          * data could be from either tap_fd, net_fd or both.
@@ -336,13 +450,32 @@ int main(int argc, char *argv[]) {
             /* data from tun/tap: just read it and write it to the network */
             nread = cread(tap_fd, buffer, BUFSIZE);
 
+//            sprintf(buffer, "Plaintext to be encrypted\0" );
+//            nread = strlen ((char *)buffer);
+
+            /* Show the plaintext */
+            do_debug("plaintext is:%s\n", buffer);
+
             tap2net++;
             do_debug("TAP2NET %lu: Read %d bytes from the tap interface\n", tap2net, nread);
 
+            /* Buffer for ciphertext. Ensure the buffer is long enough for the
+ * ciphertext which may be longer than the plaintext, dependant on the
+ * algorithm and mode
+ */
+            unsigned char ciphertext[BUFSIZE];
+
+            /* Encrypt the plaintext */
+            ciphertext_len = encrypt(buffer, nread, key, iv,
+                                     ciphertext);
+
+            /* Show the encrypted text */
+            do_debug("Encrypted text is:%s\n", ciphertext);
+
             /* write length + packet */
-            plength = htons(nread);
+            plength = htons(ciphertext_len);
             nwrite = cwrite(net_fd, (char *) &plength, sizeof(plength));
-            nwrite = cwrite(net_fd, buffer, nread);
+            nwrite = cwrite(net_fd, ciphertext, ciphertext_len);
 
             do_debug("TAP2NET %lu: Written %d bytes to the network\n", tap2net, nwrite);
         }
@@ -364,8 +497,18 @@ int main(int argc, char *argv[]) {
             nread = read_n(net_fd, buffer, ntohs(plength));
             do_debug("NET2TAP %lu: Read %d bytes from the network\n", net2tap, nread);
 
+            /* Buffer for the decrypted text */
+            unsigned char decryptedtext[BUFSIZE];
+
+            /* Decrypt the ciphertext */
+            decryptedtext_len = decrypt(buffer, nread, key, iv, decryptedtext);
+
+            /* Show the decrypted text */
+            do_debug("Decrypted text is:%s\n", decryptedtext);
+
             /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
-            nwrite = cwrite(tap_fd, buffer, nread);
+            plength = htons(decryptedtext_len);
+            nwrite = cwrite(tap_fd, decryptedtext, ntohs(decryptedtext_len));
             do_debug("NET2TAP %lu: Written %d bytes to the tap interface\n", net2tap, nwrite);
         }
     }

@@ -39,4 +39,12 @@ errno.h
 -
 stdarg.h
 -
+openssl/conf.h
+-
+openssl/evp.h
+-
+openssl/err.h
+-
+string.h
+-
 
