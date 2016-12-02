@@ -137,6 +137,6 @@ int server_secure_channel(int pipefd[2]) {
     }
     printf("SUCCESS!\n");
     printf("while true..");
-    while(1){}
+    close(pipefd[0]);
     BIO_flush(sbio);
 }
