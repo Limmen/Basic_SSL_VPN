@@ -53,5 +53,5 @@ fabric.properties
 # *.ipr
 
 ##executables
-simpletun_udp
-simpletun_udp_no_encryption
+simpletun_original/simpletun_udp
+simpletun_no_encryption_udp/simpletun_udp_no_encryption

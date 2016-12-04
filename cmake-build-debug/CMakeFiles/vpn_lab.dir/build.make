@@ -57,38 +57,38 @@ include CMakeFiles/vpn_lab.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/vpn_lab.dir/flags.make
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.o: CMakeFiles/vpn_lab.dir/flags.make
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.o: ../simpletun_udp.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/vpn_lab.dir/simpletun_udp.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/vpn_lab.dir/simpletun_udp.c.o   -c /home/kim/workspace/c/vpn_lab/simpletun_udp.c
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o: CMakeFiles/vpn_lab.dir/flags.make
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o: ../simpletun_encryption_udp/simpletun_udp.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o   -c /home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.c
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/vpn_lab.dir/simpletun_udp.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/kim/workspace/c/vpn_lab/simpletun_udp.c > CMakeFiles/vpn_lab.dir/simpletun_udp.c.i
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.c > CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.i
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/vpn_lab.dir/simpletun_udp.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/kim/workspace/c/vpn_lab/simpletun_udp.c -o CMakeFiles/vpn_lab.dir/simpletun_udp.c.s
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.c -o CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.s
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.requires:
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.requires:
 
-.PHONY : CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.requires
+.PHONY : CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.requires
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.provides: CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.requires
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.provides.build
-.PHONY : CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.provides
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.provides: CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.requires
+	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.provides.build
+.PHONY : CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.provides
 
-CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.provides.build: CMakeFiles/vpn_lab.dir/simpletun_udp.c.o
+CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.provides.build: CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o
 
 
 # Object files for target vpn_lab
 vpn_lab_OBJECTS = \
-"CMakeFiles/vpn_lab.dir/simpletun_udp.c.o"
+"CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o"
 
 # External object files for target vpn_lab
 vpn_lab_EXTERNAL_OBJECTS =
 
-vpn_lab: CMakeFiles/vpn_lab.dir/simpletun_udp.c.o
+vpn_lab: CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o
 vpn_lab: CMakeFiles/vpn_lab.dir/build.make
 vpn_lab: CMakeFiles/vpn_lab.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable vpn_lab"
@@ -99,7 +99,7 @@ CMakeFiles/vpn_lab.dir/build: vpn_lab
 
 .PHONY : CMakeFiles/vpn_lab.dir/build
 
-CMakeFiles/vpn_lab.dir/requires: CMakeFiles/vpn_lab.dir/simpletun_udp.c.o.requires
+CMakeFiles/vpn_lab.dir/requires: CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o.requires
 
 .PHONY : CMakeFiles/vpn_lab.dir/requires
 

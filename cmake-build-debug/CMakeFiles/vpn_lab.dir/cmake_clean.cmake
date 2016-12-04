@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/vpn_lab.dir/simpletun_udp.c.o"
+  "CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o"
   "vpn_lab.pdb"
   "vpn_lab"
 )

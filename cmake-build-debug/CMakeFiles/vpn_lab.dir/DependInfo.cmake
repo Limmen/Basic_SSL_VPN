@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/kim/workspace/c/vpn_lab/simpletun_udp.c" "/home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles/vpn_lab.dir/simpletun_udp.c.o"
+  "/home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.c" "/home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

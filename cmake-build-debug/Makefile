@@ -123,32 +123,32 @@ vpn_lab/fast:
 	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/build
 .PHONY : vpn_lab/fast
 
-simpletun_udp.o: simpletun_udp.c.o
+simpletun_encryption_udp/simpletun_udp.o: simpletun_encryption_udp/simpletun_udp.c.o
 
-.PHONY : simpletun_udp.o
+.PHONY : simpletun_encryption_udp/simpletun_udp.o
 
 # target to build an object file
-simpletun_udp.c.o:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_udp.c.o
-.PHONY : simpletun_udp.c.o
+simpletun_encryption_udp/simpletun_udp.c.o:
+	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.o
+.PHONY : simpletun_encryption_udp/simpletun_udp.c.o
 
-simpletun_udp.i: simpletun_udp.c.i
+simpletun_encryption_udp/simpletun_udp.i: simpletun_encryption_udp/simpletun_udp.c.i
 
-.PHONY : simpletun_udp.i
+.PHONY : simpletun_encryption_udp/simpletun_udp.i
 
 # target to preprocess a source file
-simpletun_udp.c.i:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_udp.c.i
-.PHONY : simpletun_udp.c.i
+simpletun_encryption_udp/simpletun_udp.c.i:
+	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.i
+.PHONY : simpletun_encryption_udp/simpletun_udp.c.i
 
-simpletun_udp.s: simpletun_udp.c.s
+simpletun_encryption_udp/simpletun_udp.s: simpletun_encryption_udp/simpletun_udp.c.s
 
-.PHONY : simpletun_udp.s
+.PHONY : simpletun_encryption_udp/simpletun_udp.s
 
 # target to generate assembly for a file
-simpletun_udp.c.s:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_udp.c.s
-.PHONY : simpletun_udp.c.s
+simpletun_encryption_udp/simpletun_udp.c.s:
+	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_udp.c.s
+.PHONY : simpletun_encryption_udp/simpletun_udp.c.s
 
 # Help Target
 help:
@@ -159,9 +159,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... vpn_lab"
-	@echo "... simpletun_udp.o"
-	@echo "... simpletun_udp.i"
-	@echo "... simpletun_udp.s"
+	@echo "... simpletun_encryption_udp/simpletun_udp.o"
+	@echo "... simpletun_encryption_udp/simpletun_udp.i"
+	@echo "... simpletun_encryption_udp/simpletun_udp.s"
 .PHONY : help
 
 
