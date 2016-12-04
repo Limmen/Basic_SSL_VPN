@@ -11,9 +11,8 @@ int server_secure_channel(int pipefd[2]) {
     close(pipefd[0]); // close the read-end of the pipe
     BIO *sbio, *bbio, *acpt, *out;
     int len;
-    unsigned char key[256];
-    unsigned char iv[256];
-    unsigned char tmpbuf[500];
+    unsigned char bytestream[512];
+    unsigned char tmpbuf[1000];
     char *ciphertext;
     SSL_CTX *ctx;
     SSL *ssl;
@@ -139,72 +138,42 @@ int server_secure_channel(int pipefd[2]) {
      */
     srand((unsigned char) time(NULL));
     int i;
-    for (i = 0; i < 256; i++) {
-        key[i] = rand() % 256;
-    }
-    for (i = 0; i < 256; i++) {
-        iv[i] = rand() % 256;
+    for (i = 0; i < 512; i++) {
+        bytestream[i] = rand() % 256;
     }
     /**
      * Write the generated random number to the tunnel-process to be used for encryption
      */
-    write(pipefd[1], key, 256);
-    write(pipefd[1], iv, 256);
+    write(pipefd[1], bytestream, 512);
 
     /**
      * Send the random key over the secure channel to the client
      */
-    printf("Sending the key to the client...");
+    printf("Sending the secret to the client...");
     //printf("key is %s... \n", key);
-    if (BIO_write(sbio, key, strlen(key)) <= 0) {
-        fprintf(stderr, "Error in sending key\n");
+    if (BIO_write(sbio, bytestream, 512) <= 0) {
+        fprintf(stderr, "Error in sending secret\n");
         ERR_print_errors_fp(stderr);
         exit(-1);
     }
-    printf("SUCCESS!\n");
-
-    /**
-     * Send the random IV over the secure channel to the client
-     */
-    printf("Sending the IV to the client...");
-    //printf("iv is %s... \n", iv);
-    if (BIO_write(sbio, iv, strlen(iv)) <= 0) {
-        fprintf(stderr, "Error in sending iv\n");
-        ERR_print_errors_fp(stderr);
-        exit(-1);
-    }
-
     printf("SUCCESS!\n");
 
     /**
      * Flushes any leftover data
      */
     BIO_flush(sbio);
-    close(pipefd[0]); // close the read-end of the pipe
     while (1) {
-        printf("Waiting for key from client... ");
+        printf("Waiting for secret from client... ");
         memset(tmpbuf, '\0', sizeof(tmpbuf));
-        memset(key, '\0', sizeof(key));
-        len = BIO_read(sbio, tmpbuf, 256);
+        memset(bytestream, '\0', sizeof(bytestream));
+        len = BIO_read(sbio, tmpbuf, 512);
         if (len == 0) {
             printf("FAILURE!\n remote end of socket closed by client.\n");
             break;
         }
-        strcpy(key, tmpbuf);
-        printf("SUCCESS!\nKey is: %s\n", key);
-        write(pipefd[1], key, strlen(key));
-
-        printf("Waiting for IV from client... ");
-        memset(tmpbuf, '\0', sizeof(tmpbuf));
-        memset(iv, '\0', sizeof(iv));
-        len = BIO_read(sbio, tmpbuf, 256);
-        if (len == 0) {
-            printf("FAILURE!\n remote end of socket closed by client.\n");
-            break;
-        }
-        strcpy(key, tmpbuf);
-        printf("SUCCESS!\nIV is: %s\n", iv);
-        write(pipefd[1], iv, strlen(iv));
+        memcpy(bytestream, &tmpbuf, 512);
+        printf("SUCCESS!\n");
+        write(pipefd[1], bytestream, 512);
     }
 
     /**

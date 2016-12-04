@@ -12,62 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bcd0a47-427e-4593-a0c3-eff62d558661" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_original/simpletun" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/common.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/parse_input.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/parse_input.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/tunnel_util.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/tunnel_util.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/util.c" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/util.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_no_encryption_udp/Makefile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpletun_original/Makefile" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Makefile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/server.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simpletun_udp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simpletun_udp.c" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simpletun_udp_no_encryption" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/ca.crt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/ca.key" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/client.crt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/client.csr" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/client.key" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/index.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/index.txt.attr" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/index.txt.attr.old" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/index.txt.old" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/newcerts/1000.pem" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/newcerts/1001.pem" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/serial" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/demoCA/serial.old" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/openssl.cnf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/server.crt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/server.csr" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ssl/server.key" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/client.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/client.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/server.crt" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.crt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/server.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/server.key" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.key" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/simple_udp_no_encryption.c" afterPath="$PROJECT_DIR$/simpletun_no_encryption_udp/simpletun_udp_no_encryption.c" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/simpletun.c" afterPath="$PROJECT_DIR$/simpletun_original/simpletun.c" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ssl_util.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.c" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ssl_util.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/DependInfo.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/build.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/cmake_clean.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/cmake_clean.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/link.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/vpn_lab.cbp" afterPath="$PROJECT_DIR$/cmake-build-debug/vpn_lab.cbp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/client.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -98,8 +44,8 @@
       <file leaf-file-name="simpletun_encryption_udp.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" column="27" lean-forward="true" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
+            <state relative-caret-position="459">
+              <caret line="236" column="34" lean-forward="false" selection-start-line="236" selection-start-column="34" selection-end-line="236" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -118,8 +64,8 @@
       <file leaf-file-name="server.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="136" column="0" lean-forward="false" selection-start-line="136" selection-start-column="0" selection-end-line="146" selection-end-column="5" />
+            <state relative-caret-position="339">
+              <caret line="138" column="0" lean-forward="false" selection-start-line="138" selection-start-column="0" selection-end-line="142" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -128,8 +74,8 @@
       <file leaf-file-name="client.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="618">
-              <caret line="198" column="29" lean-forward="true" selection-start-line="198" selection-start-column="29" selection-end-line="198" selection-end-column="29" />
+            <state relative-caret-position="2460">
+              <caret line="164" column="74" lean-forward="true" selection-start-line="164" selection-start-column="74" selection-end-line="164" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -159,8 +105,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>va_end</find>
-      <find>remote:</find>
       <find>parse</find>
       <find>IFNAM</find>
       <find>if_name</find>
@@ -182,13 +126,15 @@
       <find>brea</find>
       <find>AUTO_RETRY</find>
       <find>option</find>
-      <find>key</find>
       <find>key_from_ser</find>
       <find>number</find>
       <find>11</find>
       <find>10</find>
       <find>buf</find>
       <find>200</find>
+      <find>key</find>
+      <find>iv</find>
+      <find>%s</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -226,8 +172,8 @@
         <option value="$PROJECT_DIR$/server.c" />
         <option value="$PROJECT_DIR$/parse_input.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/Makefile" />
-        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
+        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
       </list>
     </option>
@@ -522,12 +468,12 @@
       <workItem from="1480703381981" duration="3839000" />
       <workItem from="1480837454866" duration="1307000" />
       <workItem from="1480838915845" duration="261000" />
-      <workItem from="1480839430897" duration="16442000" />
+      <workItem from="1480839430897" duration="18094000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66058000" />
+    <option name="totallyTimeSpent" value="67710000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -540,7 +486,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1918" y="2" width="963" height="1199" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37526652" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -548,7 +494,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908162" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26476014" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26476014" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908162" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -887,14 +833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="27" lean-forward="true" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -903,18 +841,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="236" column="34" lean-forward="false" selection-start-line="236" selection-start-column="34" selection-end-line="236" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="136" column="0" lean-forward="false" selection-start-line="136" selection-start-column="0" selection-end-line="146" selection-end-column="5" />
+        <state relative-caret-position="339">
+          <caret line="138" column="0" lean-forward="false" selection-start-line="138" selection-start-column="0" selection-end-line="142" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="198" column="29" lean-forward="true" selection-start-line="198" selection-start-column="29" selection-end-line="198" selection-end-column="29" />
+        <state relative-caret-position="2460">
+          <caret line="164" column="74" lean-forward="true" selection-start-line="164" selection-start-column="74" selection-end-line="164" selection-end-column="74" />
           <folding />
         </state>
       </provider>

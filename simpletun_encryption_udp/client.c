@@ -28,9 +28,8 @@ int client_secure_channel(int pipefd[2]) {
     BIO *sbio, *out;
     int len;
     char *message;
-    char key[256];
-    char iv[256];
-    char tmpbuf[500];
+    unsigned char bytestream[512];
+    unsigned char tmpbuf[1000];
 
     SSL_CTX *ctx;
     SSL *ssl;
@@ -140,24 +139,16 @@ int client_secure_channel(int pipefd[2]) {
     /**
      * Connection is already set up, now we await random number from server with BIO_read()
      */
-    printf("Waiting for key from server... ");
-    memset(tmpbuf, '\0', 11);
-    memset(key, '\0', 11);
-    len = BIO_read(sbio, tmpbuf, 10);
-    strcpy(key, tmpbuf);
-    printf("SUCCESS!\nKey is: %s\n", key);
-    write(pipefd[1], key, strlen(key));
-
-    printf("Waiting for IV from server... ");
-    memset(tmpbuf, '\0', 11);
-    memset(iv, '\0', 11);
-    len = BIO_read(sbio, tmpbuf, 10);
-    strcpy(iv, tmpbuf);
-    printf("SUCCESS!\nIV is: %s\n", iv);
-    write(pipefd[1], iv, strlen(iv));
+    printf("Waiting for secret from server... ");
+    memset(tmpbuf, '\0', sizeof(tmpbuf));
+    memset(bytestream, '\0', sizeof(bytestream));
+    len = BIO_read(sbio, tmpbuf, 512);
+    memcpy(bytestream, &tmpbuf, 512);
+    printf("SUCCESS!");
+    write(pipefd[1], bytestream, 512);
 
     while (1) {
-        printf("Enter 1 to generate new private key and IV and send to server:\n");
+        printf("Enter 1 to generate new bytestream to establish new private key and IV with server:\n");
         printf("> ");
         int choice;
         scanf("%d", &choice);
@@ -166,33 +157,21 @@ int client_secure_channel(int pipefd[2]) {
          */
         srand((unsigned char) time(NULL));
         int i;
-        for (i = 0; i < 256; i++) {
-            key[i] = rand() % 256;
-        }
-        for (i = 0; i < 256; i++) {
-            iv[i] = rand() % 256;
+        for (i = 0; i < 512; i++) {
+            bytestream[i] = rand() % 256;
         }
 
         /**
          * Write the generated random number to the tunnel-process to be used for encryption
          */
-        write(pipefd[1], key, strlen(key));
-        write(pipefd[1], iv, strlen(iv));
+        write(pipefd[1], bytestream, 512);
 
         /**
          * Send the random over the secure channel to the client
          */
-        printf("Sending the key to the server...");
-        if (BIO_write(sbio, key, strlen(key)) <= 0) {
-            fprintf(stderr, "Error in sending key\n");
-            ERR_print_errors_fp(stderr);
-            break;
-        }
-        printf("SUCCESS!\n");
-
-        printf("Sending the iv to the server...");
-        if (BIO_write(sbio, iv, strlen(iv)) <= 0) {
-            fprintf(stderr, "Error in sending iv\n");
+        printf("Sending the secret to the server...");
+        if (BIO_write(sbio, bytestream, 512) <= 0) {
+            fprintf(stderr, "Error in sending secret\n");
             ERR_print_errors_fp(stderr);
             break;
         }
