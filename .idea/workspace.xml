@@ -12,20 +12,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bcd0a47-427e-4593-a0c3-eff62d558661" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/DependInfo.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/DependInfo.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/build.make" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/build.make" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/cmake_clean.cmake" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/cmake_clean.cmake" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/link.txt" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/vpn_lab.dir/link.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/vpn_lab.cbp" afterPath="$PROJECT_DIR$/cmake-build-debug/vpn_lab.cbp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.crt" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.crt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.key" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/certs_and_keys/server.key" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/client.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/client.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/client.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/server.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -63,12 +55,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="client.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="client.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="15" column="77" lean-forward="false" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
-              <folding />
+            <state relative-caret-position="150">
+              <caret line="10" column="22" lean-forward="false" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,9 +70,11 @@
       <file leaf-file-name="server.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="19" column="14" lean-forward="false" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
-              <folding />
+            <state relative-caret-position="301">
+              <caret line="26" column="22" lean-forward="false" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+              <folding>
+                <marker date="1480934895294" expanded="true" signature="361:7666" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -93,12 +89,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="server.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="15" column="77" lean-forward="false" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
-              <folding />
+            <state relative-caret-position="150">
+              <caret line="10" column="22" lean-forward="false" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -106,8 +104,8 @@
       <file leaf-file-name="client.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="40" column="14" lean-forward="false" selection-start-line="40" selection-start-column="14" selection-end-line="40" selection-end-column="14" />
+            <state relative-caret-position="466">
+              <caret line="102" column="30" lean-forward="true" selection-start-line="102" selection-start-column="30" selection-end-line="102" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -137,13 +135,9 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>IFNAM</find>
-      <find>if_name</find>
-      <find>opt</find>
       <find>optind</find>
       <find>header_len</find>
       <find>flags</find>
-      <find>port</find>
       <find>tun_alloc</find>
       <find>usage</find>
       <find>debug</find>
@@ -167,6 +161,10 @@
       <find>iv</find>
       <find>%s</find>
       <find>512</find>
+      <find>port</find>
+      <find>peer</find>
+      <find>set_veri</find>
+      <find>ssl</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -205,11 +203,11 @@
         <option value="$PROJECT_DIR$/parse_input.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/Makefile" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
-        <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
-        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/common.h" />
-        <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.h" />
+        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
+        <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.h" />
+        <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.h" />
       </list>
     </option>
   </component>
@@ -522,12 +520,12 @@
       <workItem from="1480837454866" duration="1307000" />
       <workItem from="1480838915845" duration="261000" />
       <workItem from="1480839430897" duration="18094000" />
-      <workItem from="1480929035895" duration="1959000" />
+      <workItem from="1480929035895" duration="6135000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69669000" />
+    <option name="totallyTimeSpent" value="73845000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -542,13 +540,13 @@
     <frame x="-2" y="2" width="1604" height="899" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28372386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18239392" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32841328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908162" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19260204" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44387755" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908162" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -577,7 +575,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
           <caret line="38" column="61" lean-forward="false" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
-          <folding />
+          <folding>
+            <marker date="1480934895294" expanded="true" signature="361:7666" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -593,7 +593,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1905">
           <caret line="127" column="23" lean-forward="true" selection-start-line="127" selection-start-column="23" selection-end-line="127" selection-end-column="23" />
-          <folding />
+          <folding>
+            <marker date="1480934895294" expanded="true" signature="361:7666" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -796,22 +798,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="40" column="14" lean-forward="false" selection-start-line="40" selection-start-column="14" selection-end-line="40" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="19" column="14" lean-forward="false" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/common.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -820,19 +806,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.h">
+    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="15" column="77" lean-forward="false" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
+        <state relative-caret-position="466">
+          <caret line="102" column="30" lean-forward="true" selection-start-line="102" selection-start-column="30" selection-end-line="102" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="26" column="22" lean-forward="false" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+          <folding>
+            <marker date="1480934895294" expanded="true" signature="361:7666" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="15" column="77" lean-forward="false" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
-          <folding />
+        <state relative-caret-position="150">
+          <caret line="10" column="22" lean-forward="false" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/client.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="22" lean-forward="false" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

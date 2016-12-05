@@ -6,6 +6,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define CERTF "certs_and_keys/client.crt"
 #define KEYF "certs_and_keys/client.key"

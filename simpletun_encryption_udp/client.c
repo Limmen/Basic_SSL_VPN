@@ -39,32 +39,26 @@ int client_secure_channel(int pipefd[2]) {
     unsigned char *signature;
     X509 *server_cert;
     char *str;
+    int err;
+    int sd;
+    struct sockaddr_in sa;
+    SSL_METHOD *meth;
 
     /**
      * Get host + port of server to initiate secure channel
      */
     get_server_details(serverName, serverPort);
 
-    /**
-     * Initialize SSL libraries
-     */
-    SSL_library_init();
-    ERR_load_crypto_strings();
-    ERR_load_SSL_strings();
-    OpenSSL_add_all_algorithms();
-
-    /* We would seed the PRNG here if the platform didn't
-     * do it automatically through /dev/urandom
-     */
 
     /**
-     * Initialize SSL_CTX object with cipher/key/cert configurations that then can be reused for many SSL connections.
-     * Certificate used is  "server.crt"
-     * Private key used is "server.key"
-     * Check_private_key means that the private key will be verified against the certificate used.
-     * SSL_v23 means that the context object supports SSL connections that understand SSLv3, TLSv1, TLSv1.1 and TLSv1.2
+     * SSL initialization
      */
-    ctx = SSL_CTX_new(SSLv23_client_method());
+    SSLeay_add_ssl_algorithms();
+    meth = (SSL_METHOD *) SSLv23_client_method();
+    SSL_load_error_strings();
+    ctx = SSL_CTX_new(meth);
+    CHK_NULL(ctx);
+    CHK_SSL(err);
 
 
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
@@ -85,70 +79,49 @@ int client_secure_channel(int pipefd[2]) {
         exit(-4);
     }
 
-    /* We'd normally set some stuff like the verify paths and
-     * mode here because as things stand this will connect to
-     * any server whose certificate is signed by any CA.
-     */
+    /* ----------------------------------------------- */
+    /* Create a socket and connect to server using normal socket calls. */
 
     /**
-     * Creates new BIO (abstraction for input/output source that allows to use same method calls despite the
-     * underlying IO mechanism) connect object that uses the SSL context.
+     * Creates normal TCP socket
      */
-    sbio = BIO_new_ssl_connect(ctx);
+    sd = socket(AF_INET, SOCK_STREAM, 0);
+    CHK_ERR(sd, "socket");
 
     /**
-     * Retrieves SSL pointer (SSL *) of the BIO, which we can use to invoke the SSL library functions
+     * Setup server adress info
      */
-    BIO_get_ssl(sbio, &ssl);
-
-    if (!ssl) {
-        fprintf(stderr, "Can't locate SSL pointer\n");
-        /* whatever ... */
-    }
+    memset(&sa, '\0', sizeof(sa));
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = inet_addr(serverName);   /* Server IP */
+    sa.sin_port = htons(serverPort);          /* Server Port number */
 
     /**
-     * Don't want any retries
+     * Tries to open up a TCP connection to the server
      */
-    SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY);
+    err = connect(sd, (struct sockaddr *) &sa,
+                  sizeof(sa));
+    CHK_ERR(err, "connect");
 
-    /* We might want to do other things with ssl here */
+    /* ----------------------------------------------- */
+    /* Now we have TCP conncetion. Start SSL negotiation. */
 
+    ssl = SSL_new(ctx);
+    CHK_NULL(ssl);
+    SSL_set_fd(ssl, sd);
     /**
-     * Sets serverName as the remote hostname of the BIO
-     * Sets serverPort as the remote port of the BIO
+     * SSL_connect() initiates the TLS/SSL handshake with a server.
+     * (Server is using SSL_accept to participate in the handshake)
      */
-    BIO_set_conn_hostname(sbio, serverName);
-    BIO_set_conn_port(sbio, serverPort);
+    err = SSL_connect(ssl);
+    CHK_SSL(err);
 
+    /* Following two steps are optional and not required for
+       data exchange to be successful. */
 
-    /**
-     * Attempts to connect the bio. Returns 1 if connection was established successfully.
-     */
-    printf("Attempting to to connect to the server... ");
-    if (BIO_do_connect(sbio) <= 0) {
-        fprintf(stderr, "Error connecting to server\n");
-        ERR_print_errors_fp(stderr);
-        BIO_free_all(sbio);
-        BIO_free(out);
-        SSL_CTX_free(ctx);
-        exit(1);
-    }
-    printf("SUCCESS!\n");
+    /* Get the cipher - opt */
 
-    /**
-     * Attemps to initiate an SSL handshake on the sbio. Returns 1 if connection was established successfully
-     */
-    printf("Initiating SSL handshake with the server... ");
-    if (BIO_do_handshake(sbio) <= 0) {
-        fprintf(stderr, "Error establishing SSL connection\n");
-        ERR_print_errors_fp(stderr);
-        BIO_free_all(sbio);
-        BIO_free(out);
-        SSL_CTX_free(ctx);
-        exit(1);
-    }
-    printf("SUCCESS!\n");
-
+    printf("SSL connection using %s\n", SSL_get_cipher (ssl));
     /* Get server's certificate (note: beware of dynamic allocation) - opt */
 
     server_cert = SSL_get_peer_certificate(ssl);

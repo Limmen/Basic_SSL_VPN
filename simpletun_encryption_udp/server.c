@@ -18,32 +18,43 @@ int server_secure_channel(int pipefd[2]) {
     SSL *ssl;
     X509 *client_cert;
     char *str;
+    SSL_METHOD *meth;
+    int err;
+    int listen_sd;
+    int sd;
+    struct sockaddr_in sa_serv;
+    struct sockaddr_in sa_cli;
+    size_t client_len;
 
+    /* SSL preliminaries. We keep the certificate and key with the context. */
 
     /**
-     * Initiate SSL libraries
+     * SLL_load_error_strings registers error strings for libcrypto and libssl.
+     * This call is required to later be able to generate textual error messages.
      */
-    SSL_library_init();
-    ERR_load_crypto_strings();
-    ERR_load_SSL_strings();
-    OpenSSL_add_all_algorithms();
-
-    /* Might seed PRNG here */
-
+    SSL_load_error_strings();
     /**
-     * Initialize SSL_CTX object with cipher/key/cert configurations that then can be reused for many SSL connections.
-     * Certificate used is  "server.crt"
-     * Private key used is "server.key"
-     * Check_private_key means that the private key will be verified against the certificate used.
-     * SSL_v23 means that the context object supports SSL connections that understand SSLv3, TLSv1, TLSv1.1 and TLSv1.2
+     * Initialize SSL library by registering algorithms (i.e registers available ciphers and digests for SSL/TLS)
      */
-    ctx = SSL_CTX_new(SSLv23_server_method());
+    SSLeay_add_ssl_algorithms();
+    /**
+     * method v23 means that the SSL/TLS connection will understand  SSLv3, TLSv1, TLSv1.1 and TLSv1.2
+     */
+    meth = (SSL_METHOD *) SSLv23_server_method();
+    /**
+     * Creates a new context object (ctx) as a framework for TLS/SSL functions, the object uses the method for the connections
+     */
+    ctx = SSL_CTX_new(meth);
+    if (!ctx) {
+        ERR_print_errors_fp(stderr);
+        exit(2);
+    }
 
     /**
- * Sets peer certificate verification parameters
- * SSL_VERIFY_PEER means that the server will send a request for client-certificate in the handshake
- * (client authentication is not required by default in TLS/SSL).
- */
+     * Sets peer certificate verification parameters
+     * SSL_VERIFY_PEER means that the server will send a request for client-certificate in the handshake
+     * (client authentication is not required by default in TLS/SSL).
+     */
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL); /* whether verify the certificate */
     /**
      * Set default locations for trusted CA certs (CACERT => ca.crt), NULL means that there is not needed to provide
@@ -71,99 +82,77 @@ int server_secure_channel(int pipefd[2]) {
         exit(5);
     }
 
+    /* ----------------------------------------------- */
+    /* Prepare TCP socket for receiving connections */
 
-    /* Might do other things here like setting verify locations and
-     * DH and/or RSA temporary key callbacks
-     */
+    listen_sd = socket(AF_INET, SOCK_STREAM, 0);
+    CHK_ERR(listen_sd, "socket");
 
-    /**
-     * Creates new BIO (abstraction for input/output source that allows to use same method calls despite the
-     * underlying IO mechanism) server object that uses the SSL context.
-     */
-    sbio = BIO_new_ssl(ctx, 0);
-
-    /**
-     * Retrieves SSL pointer (SSL *) of the BIO, which we can use to invoke the SSL library functions
-     */
-    BIO_get_ssl(sbio, &ssl);
-    if (!ssl) {
-        fprintf(stderr, "Can't locate SSL pointer\n");
-        /* whatever ... */
-    }
+    memset(&sa_serv, '\0', sizeof(sa_serv)); //Initialize sa_serv to 0's, sa_serv is socket info for our endpoint
+    sa_serv.sin_family = AF_INET;
+    sa_serv.sin_addr.s_addr = INADDR_ANY;
+    sa_serv.sin_port = htons(1111);          /* Server Port number */
 
     /**
-     * Don't want any retries
+     * Binds the socket to the given address
      */
-    SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY);
+    err = bind(listen_sd, (struct sockaddr *) &sa_serv,
+               sizeof(sa_serv));
+    CHK_ERR(err, "bind");
+
+    /* Receive a TCP connection. */
 
     /**
-     * Creates a new BIO object to buffer incoming messages
+     * Prepares socket for listening for incoming connections
      */
-    bbio = BIO_new(BIO_f_buffer());
+    err = listen(listen_sd, 5);
+    CHK_ERR(err, "listen");
+
+    client_len = sizeof(sa_cli);
+    printf("Server listening for incoming connections.. \n");
+    /**
+     * Blocking call for accepting incoming client connections
+     */
+    sd = accept(listen_sd, (struct sockaddr *) &sa_cli, (socklen_t *) &client_len);
+    CHK_ERR(sd, "accept");
+    close(listen_sd); //Not gonna listen for any more connections
+    printf("Connection from %d, port %x\n",
+           sa_cli.sin_addr.s_addr, sa_cli.sin_port);
+
+    /* ----------------------------------------------- */
+    /* TCP connection is ready. Do server side SSL. */
 
     /**
-     * Add the buffering bio to the BIO chain
+     * SSL_new() creates a new SSL structure which is needed to hold the data for a TLS/SSL connection.
+     * The new structure inherits the settings of the underlying context ctx: connection method (SSLv2/v3/TLSv1),
+     * options, verification settings, timeout settings.
      */
-    sbio = BIO_push(bbio, sbio);
+    ssl = SSL_new(ctx);
+    CHK_NULL(ssl);
+    /**
+     * SSL_set_fd() sets the file descriptor sd as the input/output facility for the TLS/SSL (encrypted) side of ssl.
+     * sd will typically be the socket file descriptor of a network connection
+     */
+    SSL_set_fd(ssl, sd);
+    /**
+     * Blocking call, waiting for client to initiate TLS/SSL handshake
+     * Only returns after handshake is finnished or error occurred.
+     */
+    err = SSL_accept(ssl);
+    CHK_SSL(err);
+
+    /* Get the cipher - opt */
 
     /**
-     * Creates a new BIO to accept incoming messages on port 4433
+     * SSL_get_cipher is a macto for obtaining the name of the currently used cipher of the connection.
      */
-    acpt = BIO_new_accept((char *) "4433");
+    printf("SSL connection using %s\n", SSL_get_cipher (ssl));
 
-    /* By doing this when a new connection is established
-     * we automatically have sbio inserted into it. The
-     * BIO chain is now 'swallowed' by the accept BIO and
-     * will be freed when the accept BIO is freed.
-     */
-    BIO_set_accept_bios(acpt, sbio);
-
+    /* Get client's certificate (note: beware of dynamic allocation) - opt */
     /**
-     * Setup accept BIO
+     * SSL_get_peer_certificate() returns a pointer to the X509 certificate the peer presented during the handshake.
+     * If the peer did not present a certificate, NULL is returned.
      */
-    printf("Setting up the accept BIO... ");
-    if (BIO_do_accept(acpt) <= 0) {
-        fprintf(stderr, "Error setting up accept BIO\n");
-        ERR_print_errors_fp(stderr);
-        return (0);
-    }
-    printf("SUCCESS!\n");
-    /**
-     * Await incoming connection
-     */
-    printf("Setting up the incoming connection... ");
-    if (BIO_do_accept(acpt) <= 0) {
-        fprintf(stderr, "Error in connection\n");
-        ERR_print_errors_fp(stderr);
-        return (0);
-    }
-    printf("SUCCESS!\n");
-
-    /* We only want one connection so remove and free
-     * accept BIO
-     */
-    sbio = BIO_pop(acpt);
-
-    /**
-     * Frees up the entire BIO chain
-     */
-    BIO_free_all(acpt);
-
-    /**
-     * Awaits client to initiate the handshake and then participates in the goal to complete the handshake
-     */
-    printf("Waiting for SSL handshake...");
-    if (BIO_do_handshake(sbio) <= 0) {
-        fprintf(stderr, "Error in SSL handshake\n");
-        ERR_print_errors_fp(stderr);
-        exit(-1);
-    }
-    printf("SUCCESS!\n");
-
-    /**
-  * SSL_get_peer_certificate() returns a pointer to the X509 certificate the peer presented during the handshake.
-  * If the peer did not present a certificate, NULL is returned.
-  */
     client_cert = SSL_get_peer_certificate(ssl);
     if (client_cert != NULL) {
         printf("Client certificate:\n");
