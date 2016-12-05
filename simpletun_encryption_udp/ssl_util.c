@@ -91,16 +91,22 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
     return plaintext_len;
 }
 
-int addMAC(unsigned char *msg, int mlen, unsigned char *sig, size_t slen, EVP_PKEY* pkey)
+
+unsigned char* addMAC(unsigned char *key, int key_len, unsigned char *cipher_text, int cipher_text_len){
+    unsigned char* mac = HMAC(EVP_sha256(), key, key_len, cipher_text, cipher_text_len, NULL, NULL);
+    return mac;
+}
+
+int addMAC2(unsigned char *msg, int mlen, unsigned char *sig, size_t slen, EVP_PKEY* pkey)
 {
     /* Returned to caller */
     int result = -1;
-
+    /*
     if(!msg || !mlen || !sig || !pkey) {
         assert(0);
         return -1;
     }
-
+*/
     if(sig)
         OPENSSL_free(sig);
 

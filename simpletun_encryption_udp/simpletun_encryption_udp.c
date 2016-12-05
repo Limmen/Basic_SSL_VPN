@@ -8,7 +8,6 @@
 #define BUFSIZE 4000
 
 int main(int argc, char *argv[]) {
-
     int tap_fd; //tap_fd will be either referring to a TAP or TUN interface, depending on user parameters
     int maxfd;
     uint16_t nread, nwrite, plength;
@@ -26,10 +25,7 @@ int main(int argc, char *argv[]) {
     unsigned char iv[256];
 
     /* 256 bit MAC */
-    unsigned char mac[256];
-
-    /* Key for HMAC, derived from private key */
-    EVP_PKEY *hmac_key;
+    unsigned char *mac;
 
     /**
      * Initialize SSL libraries
@@ -179,14 +175,24 @@ int main(int argc, char *argv[]) {
                 /* Show the encrypted text */
                 //do_debug("Encrypted text is:%s\n", ciphertext);
 
-                addMAC(ciphertext, ciphertext_len, mac, 256, hmac_key);
-                printf("MAC is : %s \n", mac);
-
+                mac = addMAC(key, 32, ciphertext, ciphertext_len);
+                int msg_len = 256 + ciphertext_len;
+                unsigned char msg[msg_len];
+                int i;
+                for (i = 0; i < 256; i++) {
+                    msg[i] = &mac[i];
+                }
+                int j = 0;
+                for (i = 256; i < msg_len; i++) {
+                    msg[i] = ciphertext[j];
+                    j++;
+                }
+                //printf("MAC is : %s \n", mac);
 
                 /* write length + packet */
-                plength = htons(ciphertext_len);
+                plength = htons(msg_len);
                 nwrite = cwrite(net_fd, (char *) &plength, sizeof(plength));
-                nwrite = cwrite(net_fd, ciphertext, ciphertext_len);
+                nwrite = cwrite(net_fd, msg, msg_len);
             } else {
                 do_debug("Key and IV is not setup, all messages on tunnel will be in plaintext");
                 /* write length + packet */
@@ -216,17 +222,48 @@ int main(int argc, char *argv[]) {
 
             if (keysInitialized) {
 
-                /* Buffer for the decrypted text */
-                unsigned char decryptedtext[BUFSIZE];
+                int i;
+                if (nread > 256) {
+                    unsigned char mac_sign[256];
+                    unsigned char msg[nread - 256];
+                    int msg_len = 0;
+                    for (i = 0; i < nread; i++) {
+                        if(i < 256){
+                            mac_sign[i] = buffer[i];
+                        } else {
+                            msg[i] = buffer[i];
+                            msg_len++;
+                        }
+                    }
+                    unsigned char *mac_verify;
+                    mac_verify = addMAC(key, 32, msg, msg_len);
+                    int fail = 0;
+                    for(int i = 0; i < 256; i++){
+                        if(&mac_verify[i] != mac_sign[i]){
+                            printf("MAC codes does not match \n");
+                            break;
+                        }
+                    }
+                    printf("MAC code is verified \n");
+                    /* Buffer for the decrypted text */
+                    unsigned char decryptedtext[BUFSIZE];
+                    /* Decrypt the ciphertext */
+                    decryptedtext_len = decrypt(msg, msg_len, key, iv, decryptedtext);
+                    /* Show the decrypted text */
+                    do_debug("Decrypted text is:%s\n", decryptedtext);
+                    /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
+                    nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                } else {
 
-                /* Decrypt the ciphertext */
-                decryptedtext_len = decrypt(buffer, nread, key, iv, decryptedtext);
-
-                /* Show the decrypted text */
-                do_debug("Decrypted text is:%s\n", decryptedtext);
-
-                /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
-                nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                    /* Buffer for the decrypted text */
+                    unsigned char decryptedtext[BUFSIZE];
+                    /* Decrypt the ciphertext */
+                    decryptedtext_len = decrypt(buffer, nread, key, iv, decryptedtext);
+                    /* Show the decrypted text */
+                    do_debug("Decrypted text is:%s\n", decryptedtext);
+                    /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
+                    nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                }
             } else {
                 /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
                 nwrite = cwrite(tap_fd, buffer, nread);
@@ -249,7 +286,6 @@ int main(int argc, char *argv[]) {
                 for (i = 32; i < 48; i++) {
                     iv[i] = buf[i];
                 }
-                createPKEY(hmac_key, key, 32);
                 keysInitialized = 1;
             }
             //do_debug("read: %s from tcp process \n", buf);
