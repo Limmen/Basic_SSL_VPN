@@ -25,6 +25,12 @@ int main(int argc, char *argv[]) {
     /* 128 bit IV */
     unsigned char iv[256];
 
+    /* 256 bit MAC */
+    unsigned char mac[256];
+
+    /* Key for HMAC, derived from private key */
+    EVP_PKEY *hmac_key;
+
     /**
      * Initialize SSL libraries
      */
@@ -171,7 +177,11 @@ int main(int argc, char *argv[]) {
                                          ciphertext);
 
                 /* Show the encrypted text */
-                do_debug("Encrypted text is:%s\n", ciphertext);
+                //do_debug("Encrypted text is:%s\n", ciphertext);
+
+                addMAC(ciphertext, ciphertext_len, mac, 256, hmac_key);
+                printf("MAC is : %s \n", mac);
+
 
                 /* write length + packet */
                 plength = htons(ciphertext_len);
@@ -239,6 +249,7 @@ int main(int argc, char *argv[]) {
                 for (i = 32; i < 48; i++) {
                     iv[i] = buf[i];
                 }
+                createPKEY(hmac_key, key, 32);
                 keysInitialized = 1;
             }
             //do_debug("read: %s from tcp process \n", buf);
