@@ -9,11 +9,8 @@
  */
 int server_secure_channel(int pipefd[2]) {
     close(pipefd[0]); // close the read-end of the pipe
-    BIO *sbio, *bbio, *acpt, *out;
-    int len;
     unsigned char bytestream[48]; //256 bit key + 128 bit IV to be used for AES256
     unsigned char tmpbuf[100];
-    char *ciphertext;
     SSL_CTX *ctx;
     SSL *ssl;
     X509 *client_cert;
@@ -25,8 +22,6 @@ int server_secure_channel(int pipefd[2]) {
     struct sockaddr_in sa_serv;
     struct sockaddr_in sa_cli;
     size_t client_len;
-
-    /* SSL preliminaries. We keep the certificate and key with the context. */
 
     /**
      * SLL_load_error_strings registers error strings for libcrypto and libssl.
@@ -49,7 +44,6 @@ int server_secure_channel(int pipefd[2]) {
         ERR_print_errors_fp(stderr);
         exit(2);
     }
-
     /**
      * Sets peer certificate verification parameters
      * SSL_VERIFY_PEER means that the server will send a request for client-certificate in the handshake
@@ -57,8 +51,7 @@ int server_secure_channel(int pipefd[2]) {
      */
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL); /* whether verify the certificate */
     /**
-     * Set default locations for trusted CA certs (CACERT => ca.crt), NULL means that there is not needed to provide
-     * a path since we are in right directory.
+     * Set default locations for trusted CA certs, NULL means that there is not needed to provide a path
      */
     SSL_CTX_load_verify_locations(ctx, CACERT, NULL);
 
@@ -82,16 +75,16 @@ int server_secure_channel(int pipefd[2]) {
         exit(5);
     }
 
-    /* ----------------------------------------------- */
-    /* Prepare TCP socket for receiving connections */
-
+    /**
+     * Prepare TCP socket for receiving conncetions
+     */
     listen_sd = socket(AF_INET, SOCK_STREAM, 0);
     CHK_ERR(listen_sd, "socket");
 
     memset(&sa_serv, '\0', sizeof(sa_serv)); //Initialize sa_serv to 0's, sa_serv is socket info for our endpoint
     sa_serv.sin_family = AF_INET;
     sa_serv.sin_addr.s_addr = INADDR_ANY;
-    sa_serv.sin_port = htons(1111);          /* Server Port number */
+    sa_serv.sin_port = htons(4433);          /* Server Port number */
 
     /**
      * Binds the socket to the given address
@@ -100,14 +93,12 @@ int server_secure_channel(int pipefd[2]) {
                sizeof(sa_serv));
     CHK_ERR(err, "bind");
 
-    /* Receive a TCP connection. */
 
     /**
      * Prepares socket for listening for incoming connections
      */
     err = listen(listen_sd, 5);
     CHK_ERR(err, "listen");
-
     client_len = sizeof(sa_cli);
     printf("Server listening for incoming connections.. \n");
     /**
@@ -116,10 +107,8 @@ int server_secure_channel(int pipefd[2]) {
     sd = accept(listen_sd, (struct sockaddr *) &sa_cli, (socklen_t *) &client_len);
     CHK_ERR(sd, "accept");
     close(listen_sd); //Not gonna listen for any more connections
-    printf("Connection from %d, port %x\n",
-           sa_cli.sin_addr.s_addr, sa_cli.sin_port);
+    printf("Connection from %d, port %x\n", sa_cli.sin_addr.s_addr, sa_cli.sin_port);
 
-    /* ----------------------------------------------- */
     /* TCP connection is ready. Do server side SSL. */
 
     /**
@@ -144,7 +133,7 @@ int server_secure_channel(int pipefd[2]) {
     /* Get the cipher - opt */
 
     /**
-     * SSL_get_cipher is a macto for obtaining the name of the currently used cipher of the connection.
+     * SSL_get_cipher is a macro for obtaining the name of the currently used cipher of the connection.
      */
     printf("SSL connection using %s\n", SSL_get_cipher (ssl));
 
@@ -191,24 +180,17 @@ int server_secure_channel(int pipefd[2]) {
      * Send the random key over the secure channel to the client
      */
     printf("Sending the secret to the client...");
-    //printf("key is %s... \n", key);
-    if (BIO_write(sbio, bytestream, 48) <= 0) {
-        fprintf(stderr, "Error in sending secret\n");
-        ERR_print_errors_fp(stderr);
-        exit(-1);
-    }
+    err = SSL_write(ssl, bytestream, 48);
+    CHK_SSL(err);
     printf("SUCCESS!\n");
 
-    /**
-     * Flushes any leftover data
-     */
-    BIO_flush(sbio);
     while (1) {
         printf("Waiting for secret from client... ");
         memset(tmpbuf, '\0', sizeof(tmpbuf));
         memset(bytestream, '\0', sizeof(bytestream));
-        len = BIO_read(sbio, tmpbuf, 48);
-        if (len == 0) {
+        err = SSL_read(ssl, tmpbuf, 48);
+        CHK_SSL(err);
+        if (err == 0) {
             printf("FAILURE!\n remote end of socket closed by client.\n");
             break;
         }

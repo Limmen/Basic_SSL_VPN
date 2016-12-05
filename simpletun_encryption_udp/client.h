@@ -13,6 +13,7 @@
 #define CERTF "certs_and_keys/client.crt"
 #define KEYF "certs_and_keys/client.key"
 #define CACERT "certs_and_keys/ca.crt"
+#define FAKE_CACERT "certs_and_keys/fake_ca.crt"
 
 #define CHK_NULL(x) if ((x)==NULL) exit (1)
 #define CHK_ERR(err,s) if ((err)==-1) { perror(s); exit(1); }

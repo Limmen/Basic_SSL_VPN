@@ -7,7 +7,7 @@
  * @param serverName buffer to store hostname
  * @param serverPort buffer to store port
  */
-void get_server_details(char *serverName, char *serverPort){
+void get_server_details(char *serverName, char *serverPort) {
     printf("Enter server host name: ");
     scanf("%s", serverName);
     printf("Enter server port: ");
@@ -25,18 +25,10 @@ int client_secure_channel(int pipefd[2]) {
     close(pipefd[0]); // close the read-end of the pipe
     char serverName[32];
     char serverPort[5];
-    BIO *sbio, *out;
-    int len;
-    char *message;
     unsigned char bytestream[48]; //256 bit key + 128 bit IV to be used for AES256
     unsigned char tmpbuf[100];
     SSL_CTX *ctx;
     SSL *ssl;
-    RSA *privKey;
-    FILE *file;
-    unsigned int numLength;
-    unsigned int sigLength;
-    unsigned char *signature;
     X509 *server_cert;
     char *str;
     int err;
@@ -60,10 +52,23 @@ int client_secure_channel(int pipefd[2]) {
     CHK_NULL(ctx);
     CHK_SSL(err);
 
-
+    /**
+     * Sets peer certificate verification parameters
+     * SSL_VERIFY_PEER means that the client will send a request for server-certificate in the handshake
+     * NULL because we don't need explicit callback for verification, use openSSL default verification
+     */
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
+    /**
+     * Set default locations for trusted CA certs (CACERT => ca.crt), NULL means that there is not needed to provide
+     * a path since we are in right directory.
+     */
     SSL_CTX_load_verify_locations(ctx, CACERT, NULL);
 
+
+    /**
+     * These functions load the certificates and private keys into the SSL_CTX or SSL object, respectively.
+     * Later when we create connections from the CTX object, the keys/certs will be used.
+     */
     if (SSL_CTX_use_certificate_file(ctx, CERTF, SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         exit(-2);
@@ -74,12 +79,14 @@ int client_secure_channel(int pipefd[2]) {
         exit(-3);
     }
 
+    /**
+     * Checks that the configured private key is consistent with the configured certificate
+     */
     if (!SSL_CTX_check_private_key(ctx)) {
         printf("Private key does not match the certificate public key \n");
         exit(-4);
     }
 
-    /* ----------------------------------------------- */
     /* Create a socket and connect to server using normal socket calls. */
 
     /**
@@ -94,7 +101,7 @@ int client_secure_channel(int pipefd[2]) {
     memset(&sa, '\0', sizeof(sa));
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = inet_addr(serverName);   /* Server IP */
-    sa.sin_port = htons(serverPort);          /* Server Port number */
+    sa.sin_port = htons(atoi(serverPort));          /* Server Port number */
 
     /**
      * Tries to open up a TCP connection to the server
@@ -149,7 +156,8 @@ int client_secure_channel(int pipefd[2]) {
     printf("Waiting for secret from server... ");
     memset(tmpbuf, '\0', sizeof(tmpbuf));
     memset(bytestream, '\0', sizeof(bytestream));
-    len = BIO_read(sbio, tmpbuf, 48);
+    err = SSL_read(ssl, tmpbuf, 48);
+    CHK_SSL(err);
     memcpy(bytestream, &tmpbuf, 48);
     printf("SUCCESS!");
     write(pipefd[1], bytestream, 48);
@@ -177,12 +185,9 @@ int client_secure_channel(int pipefd[2]) {
          * Send the random over the secure channel to the client
          */
         printf("Sending the secret to the server...");
-        if (BIO_write(sbio, bytestream, 48) <= 0) {
-            fprintf(stderr, "Error in sending secret\n");
-            ERR_print_errors_fp(stderr);
-            break;
-        }
-        printf("SUCCESS!\n");
+        err = SSL_write(ssl, bytestream, 48);
+        CHK_SSL(err);
+        printf("SUCCESS!");
     }
     close(pipefd[0]);
 }
