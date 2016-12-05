@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     int tap_fd; //tap_fd will be either referring to a TAP or TUN interface, depending on user parameters
     int maxfd;
     uint16_t nread, nwrite, plength;
-    char buffer[BUFSIZE];
+    unsigned char buffer[BUFSIZE];
     struct sockaddr_in local_socket_info, remote_socket_info;
     int sock_fd, net_fd;
     unsigned long int tap2net = 0, net2tap = 0;
@@ -179,10 +179,10 @@ int main(int argc, char *argv[]) {
                 int msg_len = 32 + ciphertext_len;
                 unsigned char msg[msg_len];
                 int i;
-                printf("Generated MAC CODE: \n");
+                printf("\n Generated MAC CODE: \n");
                 for (i = 0; i < 32; i++) {
-                    printf("%i", &mac[i]);
-                    msg[i] = &mac[i];
+                    printf("%i", mac[i]);
+                    msg[i] = mac[i];
                 }
                 printf("\n");
                 int j = 0;
@@ -230,37 +230,45 @@ int main(int argc, char *argv[]) {
                     unsigned char mac_sign[32];
                     unsigned char msg[nread - 32];
                     int msg_len = 0;
+                    printf("nread: %i");
                     printf("RECEIVED MAC CODE: \n");
                     for (i = 0; i < nread; i++) {
-                        if(i < 32){
-                            printf("%i", &buffer[i]);
-                            mac_sign[i] = &buffer[i];
+                        if (i < 32) {
+                            printf("%i", buffer[i]);
+                            mac_sign[i] = buffer[i];
                         } else {
-                            msg[i] = &buffer[i];
+                            if (i == 32)
+                                printf("\n CIPHERTEXT TO COMPUTE MAC ON\n");
+                            printf("%i", buffer[i]);
+                            msg[i] = buffer[i];
                             msg_len++;
                         }
                     }
+                    printf("\n");
                     unsigned char *mac_verify;
                     mac_verify = addMAC(key, 32, msg, msg_len);
                     int fail = 0;
-                    for(int i = 0; i < 32; i++){
-                        if(&mac_verify[i] != mac_sign[i]){
-                            printf("MAC codes does not match \n");
+                    printf("GENERATED MAC AT RECEIVING SIDE: \n");
+                    for (int i = 0; i < 32; i++) {
+                        printf("%i", mac_verify[i]);
+                        if (mac_verify[i] != mac_sign[i]) {
+                            //printf("MAC codes does not match \n");
                             fail = 1;
-                            break;
+                            //break;
                         }
                     }
-                    if(fail)
-                        break;
-                    printf("MAC code is verified \n");
-                    /* Buffer for the decrypted text */
-                    unsigned char decryptedtext[BUFSIZE];
-                    /* Decrypt the ciphertext */
-                    decryptedtext_len = decrypt(msg, msg_len, key, iv, decryptedtext);
-                    /* Show the decrypted text */
-                    do_debug("Decrypted text is:%s\n", decryptedtext);
-                    /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
-                    nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                    printf("\n");
+                    if (!fail) {
+                        printf("MAC code is verified \n");
+                        /* Buffer for the decrypted text */
+                        unsigned char decryptedtext[BUFSIZE];
+                        /* Decrypt the ciphertext */
+                        decryptedtext_len = decrypt(msg, msg_len, key, iv, decryptedtext);
+                        /* Show the decrypted text */
+                        do_debug("Decrypted text is:%s\n", decryptedtext);
+                        /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
+                        nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                    }
                 } else {
 
                     /* Buffer for the decrypted text */

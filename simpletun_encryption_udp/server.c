@@ -171,10 +171,6 @@ int server_secure_channel(int pipefd[2]) {
     for (i = 0; i < 48; i++) {
         bytestream[i] = rand() % 256;
     }
-    /**
-     * Write the generated random number to the tunnel-process to be used for encryption
-     */
-    write(pipefd[1], bytestream, 48);
 
     /**
      * Send the random key over the secure channel to the client
@@ -183,6 +179,11 @@ int server_secure_channel(int pipefd[2]) {
     err = SSL_write(ssl, bytestream, 48);
     CHK_SSL(err);
     printf("SUCCESS!\n");
+
+   /**
+    * Write the generated random number to the tunnel-process to be used for encryption
+    */
+    write(pipefd[1], bytestream, 48);
 
     while (1) {
         printf("Waiting for secret from client... ");

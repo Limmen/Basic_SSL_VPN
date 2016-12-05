@@ -13,7 +13,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4bcd0a47-427e-4593-a0c3-eff62d558661" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,8 +55,8 @@
       <file leaf-file-name="simpletun_encryption_udp.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="245" column="28" lean-forward="true" selection-start-line="245" selection-start-column="28" selection-end-line="245" selection-end-column="28" />
+            <state relative-caret-position="105">
+              <caret line="294" column="31" lean-forward="true" selection-start-line="294" selection-start-column="31" selection-end-line="294" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -65,8 +65,8 @@
       <file leaf-file-name="server.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="83" column="4" lean-forward="false" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+            <state relative-caret-position="313">
+              <caret line="182" column="3" lean-forward="false" selection-start-line="182" selection-start-column="3" selection-end-line="182" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -118,8 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sbio</find>
-      <find>brea</find>
       <find>AUTO_RETRY</find>
       <find>option</find>
       <find>key_from_ser</find>
@@ -148,6 +146,8 @@
       <find>assert</find>
       <find>memset</find>
       <find>256</find>
+      <find>&amp;</find>
+      <find>buffer</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -188,11 +188,11 @@
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/client.h" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.h" />
-        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/Makefile" />
         <option value="$PROJECT_DIR$/tun.sh" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.h" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.c" />
+        <option value="$PROJECT_DIR$/simpletun_encryption_udp/server.c" />
         <option value="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
       </list>
     </option>
@@ -506,12 +506,12 @@
       <workItem from="1480837454866" duration="1307000" />
       <workItem from="1480838915845" duration="261000" />
       <workItem from="1480839430897" duration="18094000" />
-      <workItem from="1480929035895" duration="17769000" />
+      <workItem from="1480929035895" duration="19585000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85479000" />
+    <option name="totallyTimeSpent" value="87295000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -783,14 +783,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="83" column="4" lean-forward="false" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -817,10 +809,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/server.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="182" column="3" lean-forward="false" selection-start-line="182" selection-start-column="3" selection-end-line="182" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="245" column="28" lean-forward="true" selection-start-line="245" selection-start-column="28" selection-end-line="245" selection-end-column="28" />
+        <state relative-caret-position="105">
+          <caret line="294" column="31" lean-forward="true" selection-start-line="294" selection-start-column="31" selection-end-line="294" selection-end-column="31" />
           <folding />
         </state>
       </provider>
