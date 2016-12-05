@@ -18,15 +18,12 @@ int main(int argc, char *argv[]) {
     unsigned long int tap2net = 0, net2tap = 0;
     struct input_opts input;
     int keysInitialized = 0;
-    /* A 256 bit key */
-    //unsigned char *key = (unsigned char *) "01234567890123456789012345678901";
-    //unsigned char *key = "";
-    //unsigned char *iv = "";
-    unsigned char key[256];
+
+    /* 256 bit key */
+    unsigned char key[32];
+
+    /* 128 bit IV */
     unsigned char iv[256];
-    /* A 128 bit IV */
-    //unsigned char *iv
-    // = (unsigned char *) "01234567890123456";
 
     /**
      * Initialize SSL libraries
@@ -229,17 +226,17 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(pipefd[0], &rd_set)) {
             //memset(buf, '\0', sizeof(buf));
             int n;
-            n = read(pipefd[0], buf, 512);
+            n = read(pipefd[0], buf, 48);
             if (n == 0) {
                 do_debug("Pipe to secure TCP channel closed \n");
                 pipeClosed = 0;
             } else {
                 do_debug("read %i bytes from pipe \n", n);
                 int i;
-                for (i = 0; i < 256; i++) {
+                for (i = 0; i < 32; i++) {
                     key[i] = buf[i];
                 }
-                for (i = 256; i < 512; i++) {
+                for (i = 32; i < 48; i++) {
                     iv[i] = buf[i];
                 }
                 keysInitialized = 1;

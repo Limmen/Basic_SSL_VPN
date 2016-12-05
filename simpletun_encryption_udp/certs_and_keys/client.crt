@@ -1,0 +1,69 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4097 (0x1001)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=SE, ST=sthlm, L=Stockholm, O=kth, OU=IK2206, CN=vpn_lab
+        Validity
+            Not Before: Dec  5 09:31:10 2016 GMT
+            Not After : Dec  5 09:31:10 2017 GMT
+        Subject: C=SE, ST=sthlm, O=kth, OU=IK2206, CN=vpn_lab_client
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (1024 bit)
+                Modulus:
+                    00:eb:bb:84:dc:28:77:64:fc:c6:e6:06:7d:d9:86:
+                    d5:3c:08:d4:87:3f:1a:42:46:3e:95:a4:16:21:38:
+                    42:4d:7f:fd:96:5a:7f:11:27:28:74:6d:ff:b0:84:
+                    16:ba:0b:23:77:a6:6a:e6:87:32:8e:de:c5:e6:6e:
+                    fc:8d:32:a0:42:7a:39:af:06:0b:64:5e:36:d7:1e:
+                    fc:fc:a7:8d:6e:76:29:98:e2:d7:b5:17:e2:5b:7a:
+                    b8:9a:49:33:c1:8c:99:be:d4:b3:0a:81:99:cc:16:
+                    db:01:3c:d0:a3:3c:12:56:9c:0f:09:60:14:56:9e:
+                    82:df:36:e1:e8:50:d1:30:59
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                19:75:4B:43:18:54:7B:67:63:58:38:D7:7B:B1:FC:C3:23:A5:2B:61
+            X509v3 Authority Key Identifier: 
+                keyid:9C:39:71:CE:DC:21:D7:68:FC:BD:F8:A3:60:90:99:61:60:5A:CF:01
+
+    Signature Algorithm: sha256WithRSAEncryption
+         b4:72:44:e6:c9:59:cd:50:d9:53:ea:01:79:c7:1e:d5:31:14:
+         8d:37:a1:b8:0f:02:de:4e:d6:04:8e:19:14:a7:ed:ef:51:99:
+         2e:d6:c2:d6:c4:c5:8e:b5:f3:97:8c:df:3c:d6:79:2e:ee:74:
+         70:cb:73:b1:fb:a8:9a:30:9c:11:04:da:71:28:38:76:09:c5:
+         62:b1:25:7b:fc:f9:5b:c9:5f:26:9e:a7:fc:4c:2b:39:0b:fb:
+         b3:0c:9e:91:40:40:e1:79:50:b3:e4:e7:4e:0f:0e:38:47:16:
+         3e:fa:40:c4:29:d6:1f:67:2d:46:f7:94:27:dc:a3:cc:70:d2:
+         99:e7:a0:c0:82:14:48:a9:87:dd:01:0e:74:59:e1:3c:3d:f1:
+         fa:64:13:67:9e:f0:d4:a8:1f:34:97:5b:50:90:30:e3:76:9b:
+         a0:10:06:55:bc:05:03:02:8f:8c:46:04:fb:11:fb:9f:14:0f:
+         b2:47:d7:3a:b5:b6:19:94:23:9e:3f:d5:b6:18:4c:f5:5b:4a:
+         8f:79:02:73:98:38:06:3a:a6:2f:25:4c:3d:e7:63:e9:77:65:
+         1e:39:87:68:6f:07:aa:cb:99:ad:37:1b:d1:4f:46:e4:67:c3:
+         43:3c:19:e1:03:aa:70:6b:96:d9:1f:9a:50:e4:7a:0f:29:60:
+         0c:1b:6b:f6
+-----BEGIN CERTIFICATE-----
+MIIDKjCCAhKgAwIBAgICEAEwDQYJKoZIhvcNAQELBQAwYjELMAkGA1UEBhMCU0Ux
+DjAMBgNVBAgMBXN0aGxtMRIwEAYDVQQHDAlTdG9ja2hvbG0xDDAKBgNVBAoMA2t0
+aDEPMA0GA1UECwwGSUsyMjA2MRAwDgYDVQQDDAd2cG5fbGFiMB4XDTE2MTIwNTA5
+MzExMFoXDTE3MTIwNTA5MzExMFowVTELMAkGA1UEBhMCU0UxDjAMBgNVBAgMBXN0
+aGxtMQwwCgYDVQQKDANrdGgxDzANBgNVBAsMBklLMjIwNjEXMBUGA1UEAwwOdnBu
+X2xhYl9jbGllbnQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAOu7hNwod2T8
+xuYGfdmG1TwI1Ic/GkJGPpWkFiE4Qk1//ZZafxEnKHRt/7CEFroLI3emauaHMo7e
+xeZu/I0yoEJ6Oa8GC2ReNtce/PynjW52KZji17UX4lt6uJpJM8GMmb7UswqBmcwW
+2wE80KM8ElacDwlgFFaegt824ehQ0TBZAgMBAAGjezB5MAkGA1UdEwQCMAAwLAYJ
+YIZIAYb4QgENBB8WHU9wZW5TU0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1Ud
+DgQWBBQZdUtDGFR7Z2NYONd7sfzDI6UrYTAfBgNVHSMEGDAWgBScOXHO3CHXaPy9
++KNgkJlhYFrPATANBgkqhkiG9w0BAQsFAAOCAQEAtHJE5slZzVDZU+oBecce1TEU
+jTehuA8C3k7WBI4ZFKft71GZLtbC1sTFjrXzl4zfPNZ5Lu50cMtzsfuomjCcEQTa
+cSg4dgnFYrEle/z5W8lfJp6n/EwrOQv7swyekUBA4XlQs+TnTg8OOEcWPvpAxCnW
+H2ctRveUJ9yjzHDSmeegwIIUSKmH3QEOdFnhPD3x+mQTZ57w1KgfNJdbUJAw43ab
+oBAGVbwFAwKPjEYE+xH7nxQPskfXOrW2GZQjnj/VthhM9VtKj3kCc5g4BjqmLyVM
+Pedj6XdlHjmHaG8HqsuZrTcb0U9G5GfDQzwZ4QOqcGuW2R+aUOR6DylgDBtr9g==
+-----END CERTIFICATE-----

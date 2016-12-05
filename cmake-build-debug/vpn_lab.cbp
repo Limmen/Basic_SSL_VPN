@@ -84,10 +84,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.c">
+		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_encryption_udp.c">
 			<Option target="vpn_lab"/>
 		</Unit>
-		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_udp.h">
+		<Unit filename="/home/kim/workspace/c/vpn_lab/simpletun_encryption_udp/simpletun_encryption_udp.h">
 			<Option target="vpn_lab"/>
 		</Unit>
 		<Unit filename="/home/kim/workspace/c/vpn_lab/CMakeLists.txt">

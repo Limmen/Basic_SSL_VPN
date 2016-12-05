@@ -11,11 +11,14 @@ int server_secure_channel(int pipefd[2]) {
     close(pipefd[0]); // close the read-end of the pipe
     BIO *sbio, *bbio, *acpt, *out;
     int len;
-    unsigned char bytestream[512];
-    unsigned char tmpbuf[1000];
+    unsigned char bytestream[48]; //256 bit key + 128 bit IV to be used for AES256
+    unsigned char tmpbuf[100];
     char *ciphertext;
     SSL_CTX *ctx;
     SSL *ssl;
+    X509 *client_cert;
+    char *str;
+
 
     /**
      * Initiate SSL libraries
@@ -35,13 +38,39 @@ int server_secure_channel(int pipefd[2]) {
      * SSL_v23 means that the context object supports SSL connections that understand SSLv3, TLSv1, TLSv1.1 and TLSv1.2
      */
     ctx = SSL_CTX_new(SSLv23_server_method());
-    if (!SSL_CTX_use_certificate_file(ctx, "certs_and_keys/server.crt", SSL_FILETYPE_PEM)
-        || !SSL_CTX_use_PrivateKey_file(ctx, "certs_and_keys/server.key", SSL_FILETYPE_PEM)
-        || !SSL_CTX_check_private_key(ctx)) {
-        fprintf(stderr, "Error setting up SSL_CTX\n");
+
+    /**
+ * Sets peer certificate verification parameters
+ * SSL_VERIFY_PEER means that the server will send a request for client-certificate in the handshake
+ * (client authentication is not required by default in TLS/SSL).
+ */
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL); /* whether verify the certificate */
+    /**
+     * Set default locations for trusted CA certs (CACERT => ca.crt), NULL means that there is not needed to provide
+     * a path since we are in right directory.
+     */
+    SSL_CTX_load_verify_locations(ctx, CACERT, NULL);
+
+    /**
+     * These functions load the certificates and private keys into the SSL_CTX or SSL object, respectively.
+     * Later when we create connections from the CTX object, the keys/certs will be used.
+     */
+    if (SSL_CTX_use_certificate_file(ctx, CERTF, SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
-        return (0);
+        exit(3);
     }
+    if (SSL_CTX_use_PrivateKey_file(ctx, KEYF, SSL_FILETYPE_PEM) <= 0) {
+        ERR_print_errors_fp(stderr);
+        exit(4);
+    }
+    /**
+     * Checks that the configured private key is consistent with the configured certificate
+     */
+    if (!SSL_CTX_check_private_key(ctx)) {
+        fprintf(stderr, "Private key does not match the certificate public key\n");
+        exit(5);
+    }
+
 
     /* Might do other things here like setting verify locations and
      * DH and/or RSA temporary key callbacks
@@ -66,8 +95,6 @@ int server_secure_channel(int pipefd[2]) {
      * Don't want any retries
      */
     SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY);
-
-    /* Create the buffering BIO */
 
     /**
      * Creates a new BIO object to buffer incoming messages
@@ -134,24 +161,49 @@ int server_secure_channel(int pipefd[2]) {
     printf("SUCCESS!\n");
 
     /**
+  * SSL_get_peer_certificate() returns a pointer to the X509 certificate the peer presented during the handshake.
+  * If the peer did not present a certificate, NULL is returned.
+  */
+    client_cert = SSL_get_peer_certificate(ssl);
+    if (client_cert != NULL) {
+        printf("Client certificate:\n");
+
+        str = X509_NAME_oneline(X509_get_subject_name(client_cert), 0, 0);
+        CHK_NULL(str);
+        printf("\t subject: %s\n", str);
+        OPENSSL_free (str);
+
+        str = X509_NAME_oneline(X509_get_issuer_name(client_cert), 0, 0);
+        CHK_NULL(str);
+        printf("\t issuer: %s\n", str);
+        OPENSSL_free (str);
+
+        /* We could do all sorts of certificate verification stuff here before
+           deallocating the certificate. */
+
+        X509_free(client_cert); //Frees the datastructure holding the client cert
+    } else
+        printf("Client does not have certificate.\n");
+
+    /**
      * First seeds the RNG then generates random key and IV
      */
     srand((unsigned char) time(NULL));
     int i;
-    for (i = 0; i < 512; i++) {
+    for (i = 0; i < 48; i++) {
         bytestream[i] = rand() % 256;
     }
     /**
      * Write the generated random number to the tunnel-process to be used for encryption
      */
-    write(pipefd[1], bytestream, 512);
+    write(pipefd[1], bytestream, 48);
 
     /**
      * Send the random key over the secure channel to the client
      */
     printf("Sending the secret to the client...");
     //printf("key is %s... \n", key);
-    if (BIO_write(sbio, bytestream, 512) <= 0) {
+    if (BIO_write(sbio, bytestream, 48) <= 0) {
         fprintf(stderr, "Error in sending secret\n");
         ERR_print_errors_fp(stderr);
         exit(-1);
@@ -166,14 +218,14 @@ int server_secure_channel(int pipefd[2]) {
         printf("Waiting for secret from client... ");
         memset(tmpbuf, '\0', sizeof(tmpbuf));
         memset(bytestream, '\0', sizeof(bytestream));
-        len = BIO_read(sbio, tmpbuf, 512);
+        len = BIO_read(sbio, tmpbuf, 48);
         if (len == 0) {
             printf("FAILURE!\n remote end of socket closed by client.\n");
             break;
         }
-        memcpy(bytestream, &tmpbuf, 512);
+        memcpy(bytestream, &tmpbuf, 48);
         printf("SUCCESS!\n");
-        write(pipefd[1], bytestream, 512);
+        write(pipefd[1], bytestream, 48);
     }
 
     /**
