@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     unsigned char key[32];
 
     /* 128 bit IV */
-    unsigned char iv[256];
+    unsigned char iv[16];
 
     /* 256 bit MAC */
     unsigned char *mac;
@@ -176,14 +176,17 @@ int main(int argc, char *argv[]) {
                 //do_debug("Encrypted text is:%s\n", ciphertext);
 
                 mac = addMAC(key, 32, ciphertext, ciphertext_len);
-                int msg_len = 256 + ciphertext_len;
+                int msg_len = 32 + ciphertext_len;
                 unsigned char msg[msg_len];
                 int i;
-                for (i = 0; i < 256; i++) {
+                printf("Generated MAC CODE: \n");
+                for (i = 0; i < 32; i++) {
+                    printf("%i", &mac[i]);
                     msg[i] = &mac[i];
                 }
+                printf("\n");
                 int j = 0;
-                for (i = 256; i < msg_len; i++) {
+                for (i = 32; i < msg_len; i++) {
                     msg[i] = ciphertext[j];
                     j++;
                 }
@@ -223,27 +226,32 @@ int main(int argc, char *argv[]) {
             if (keysInitialized) {
 
                 int i;
-                if (nread > 256) {
-                    unsigned char mac_sign[256];
-                    unsigned char msg[nread - 256];
+                if (nread > 32) {
+                    unsigned char mac_sign[32];
+                    unsigned char msg[nread - 32];
                     int msg_len = 0;
+                    printf("RECEIVED MAC CODE: \n");
                     for (i = 0; i < nread; i++) {
-                        if(i < 256){
-                            mac_sign[i] = buffer[i];
+                        if(i < 32){
+                            printf("%i", &buffer[i]);
+                            mac_sign[i] = &buffer[i];
                         } else {
-                            msg[i] = buffer[i];
+                            msg[i] = &buffer[i];
                             msg_len++;
                         }
                     }
                     unsigned char *mac_verify;
                     mac_verify = addMAC(key, 32, msg, msg_len);
                     int fail = 0;
-                    for(int i = 0; i < 256; i++){
+                    for(int i = 0; i < 32; i++){
                         if(&mac_verify[i] != mac_sign[i]){
                             printf("MAC codes does not match \n");
+                            fail = 1;
                             break;
                         }
                     }
+                    if(fail)
+                        break;
                     printf("MAC code is verified \n");
                     /* Buffer for the decrypted text */
                     unsigned char decryptedtext[BUFSIZE];

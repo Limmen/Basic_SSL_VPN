@@ -13,9 +13,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4bcd0a47-427e-4593-a0c3-eff62d558661" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.c" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.h" afterPath="$PROJECT_DIR$/simpletun_encryption_udp/ssl_util.h" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -56,8 +55,8 @@
       <file leaf-file-name="simpletun_encryption_udp.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="245" column="21" lean-forward="true" selection-start-line="245" selection-start-column="21" selection-end-line="245" selection-end-column="21" />
+            <state relative-caret-position="370">
+              <caret line="245" column="28" lean-forward="true" selection-start-line="245" selection-start-column="28" selection-end-line="245" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -119,7 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>starting</find>
       <find>sbio</find>
       <find>brea</find>
       <find>AUTO_RETRY</find>
@@ -149,6 +147,7 @@
       <find>pkey</find>
       <find>assert</find>
       <find>memset</find>
+      <find>256</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -507,12 +506,12 @@
       <workItem from="1480837454866" duration="1307000" />
       <workItem from="1480838915845" duration="261000" />
       <workItem from="1480839430897" duration="18094000" />
-      <workItem from="1480929035895" duration="17075000" />
+      <workItem from="1480929035895" duration="17769000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84785000" />
+    <option name="totallyTimeSpent" value="85479000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -820,8 +819,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/simpletun_encryption_udp/simpletun_encryption_udp.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="245" column="21" lean-forward="true" selection-start-line="245" selection-start-column="21" selection-end-line="245" selection-end-column="21" />
+        <state relative-caret-position="370">
+          <caret line="245" column="28" lean-forward="true" selection-start-line="245" selection-start-column="28" selection-end-line="245" selection-end-column="28" />
           <folding />
         </state>
       </provider>
