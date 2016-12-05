@@ -119,7 +119,6 @@ int main(int argc, char *argv[]) {
             FD_SET(pipefd[0], &rd_set);
         }
 
-
         /**
          * Monitors filedescriptors to know when they are ready for I/O, uses no timeout (NULL), first argument is
          * the highest-numbered file-descriptor in any of the sets + 1.
@@ -157,10 +156,10 @@ int main(int argc, char *argv[]) {
             do_debug("TAP2NET %lu: Read %d bytes from the tap interface\n", tap2net, nread);
 
             if (keysInitialized) {
-                do_debug("Key and IV is set, encrypting tunnel output");
+                do_debug("Key and IV is set, encrypting tunnel output \n");
 
                 /* Show the plaintext */
-                do_debug("plaintext is:%s\n", buffer);
+                //do_debug("plaintext is:%s\n", buffer);
 
                 /* Buffer for ciphertext. Ensure the buffer is long enough for the
                  * ciphertext which may be longer than the plaintext, dependant on the
@@ -179,19 +178,14 @@ int main(int argc, char *argv[]) {
                 int msg_len = 32 + ciphertext_len;
                 unsigned char msg[msg_len];
                 int i;
-                printf("\n Generated MAC CODE: \n");
                 for (i = 0; i < 32; i++) {
-                    printf("%i", mac[i]);
                     msg[i] = mac[i];
                 }
-                printf("\n");
                 int j = 0;
                 for (i = 32; i < msg_len; i++) {
                     msg[i] = ciphertext[j];
                     j++;
                 }
-                //printf("MAC is : %s \n", mac);
-
                 /* write length + packet */
                 plength = htons(msg_len);
                 nwrite = cwrite(net_fd, (char *) &plength, sizeof(plength));
@@ -216,67 +210,55 @@ int main(int argc, char *argv[]) {
                 /* ctrl-c at the other end */
                 break;
             }
-
             net2tap++;
-
             /* read packet */
             nread = read_n(net_fd, buffer, ntohs(plength));
             do_debug("NET2TAP %lu: Read %d bytes from the network\n", net2tap, nread);
-
             if (keysInitialized) {
-
                 int i;
                 if (nread > 32) {
                     unsigned char mac_sign[32];
+                    memset(mac_sign, '\0', 32);
+                    int msg_len = nread - 32;
                     unsigned char msg[nread - 32];
-                    int msg_len = 0;
-                    printf("nread: %i");
-                    printf("RECEIVED MAC CODE: \n");
-                    for (i = 0; i < nread; i++) {
-                        if (i < 32) {
-                            printf("%i", buffer[i]);
-                            mac_sign[i] = buffer[i];
-                        } else {
-                            if (i == 32)
-                                printf("\n CIPHERTEXT TO COMPUTE MAC ON\n");
-                            printf("%i", buffer[i]);
-                            msg[i] = buffer[i];
-                            msg_len++;
-                        }
+                    memset(msg, '\0', sizeof(msg_len));
+                    for (i = 0; i < 32; i++) {
+                        mac_sign[i] = buffer[i];
                     }
-                    printf("\n");
-                    unsigned char *mac_verify;
-                    mac_verify = addMAC(key, 32, msg, msg_len);
+                    int j = 0;
+                    for (i = 32; i < nread; i++) {
+                        msg[j] = buffer[i];
+                        j++;
+                    }
+                    unsigned char *mac_verify = addMAC(key, 32, msg, msg_len);
                     int fail = 0;
-                    printf("GENERATED MAC AT RECEIVING SIDE: \n");
                     for (int i = 0; i < 32; i++) {
-                        printf("%i", mac_verify[i]);
-                        if (mac_verify[i] != mac_sign[i]) {
-                            //printf("MAC codes does not match \n");
+                        if (*(mac_verify + i) != mac_sign[i]) {
                             fail = 1;
-                            //break;
+                            break;
                         }
                     }
-                    printf("\n");
                     if (!fail) {
-                        printf("MAC code is verified \n");
+                        do_debug("MAC is verified \n");
                         /* Buffer for the decrypted text */
                         unsigned char decryptedtext[BUFSIZE];
                         /* Decrypt the ciphertext */
                         decryptedtext_len = decrypt(msg, msg_len, key, iv, decryptedtext);
                         /* Show the decrypted text */
-                        do_debug("Decrypted text is:%s\n", decryptedtext);
+                        //do_debug("Decrypted text is:%s\n", decryptedtext);
                         /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
                         nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
+                    } else {
+                        do_debug("MAC's does not match, cannot verify that message was not tampered with\n");
+                        //nwrite = cwrite(tap_fd, buffer, nread);
                     }
                 } else {
-
                     /* Buffer for the decrypted text */
                     unsigned char decryptedtext[BUFSIZE];
                     /* Decrypt the ciphertext */
                     decryptedtext_len = decrypt(buffer, nread, key, iv, decryptedtext);
                     /* Show the decrypted text */
-                    do_debug("Decrypted text is:%s\n", decryptedtext);
+                    //do_debug("Decrypted text is:%s\n", decryptedtext);
                     /* now buffer[] contains a full packet or frame, write it into the tun/tap interface */
                     nwrite = cwrite(tap_fd, decryptedtext, decryptedtext_len);
                 }
@@ -299,14 +281,16 @@ int main(int argc, char *argv[]) {
                 for (i = 0; i < 32; i++) {
                     key[i] = buf[i];
                 }
+                int j = 0;
                 for (i = 32; i < 48; i++) {
-                    iv[i] = buf[i];
+                    iv[j] = buf[i];
+                    j++;
                 }
                 keysInitialized = 1;
             }
             //do_debug("read: %s from tcp process \n", buf);
-
         }
     }
+
     return (0);
 }

@@ -83,10 +83,8 @@ struct input_opts parse_input(int argc, char *argv[]) {
         }
     }
     /* optind is the index of the next element to be processed in argv */
-
     argv += optind;
     argc -= optind;
-
     if (argc > 0) {
         my_err("Too many options!\n");
         usage(progname);
