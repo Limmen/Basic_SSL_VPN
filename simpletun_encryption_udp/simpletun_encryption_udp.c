@@ -292,8 +292,11 @@ int main(int argc, char *argv[]) {
             int n;
             n = read(pipefd[0], buf, 48);
             if (n == 0) {
-                do_debug("Pipe to secure TCP channel closed \n");
+                do_debug("Pipe to secure TCP channel closed, closing the UPD tunnel as well \n");
                 pipeClosed = 0;
+                close(sock_fd);
+                close(net_fd);
+                exit(0);
             } else {
                 do_debug("read %i bytes from pipe \n", n);
                 int i;

@@ -188,9 +188,10 @@ int client_secure_channel(int pipefd[2], pid_t ppid) {
             printf("Sending the secret to the server...");
             err = SSL_write(ssl, bytestream, 48);
             CHK_SSL(err);
-            printf("SUCCESS!");
+            printf("SUCCESS!\n");
         }
         if(choice == 2){
+            printf("shutting down.. \n");
             SSL_free(ssl);
             SSL_CTX_free(ctx);
             X509_free(server_cert);
