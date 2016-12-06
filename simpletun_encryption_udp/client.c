@@ -194,7 +194,6 @@ int client_secure_channel(int pipefd[2], pid_t ppid) {
             printf("shutting down.. \n");
             SSL_free(ssl);
             SSL_CTX_free(ctx);
-            X509_free(server_cert);
             close(sd);
             kill (getppid(), 9);
             break;

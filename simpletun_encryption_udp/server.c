@@ -195,7 +195,6 @@ int server_secure_channel(int pipefd[2], pid_t ppid) {
             printf("FAILURE!\n remote end of socket closed by client.\n");
             SSL_free(ssl);
             SSL_CTX_free(ctx);
-            X509_free(client_cert);
             close(listen_sd);
             kill (getppid(), 9);
             break;
