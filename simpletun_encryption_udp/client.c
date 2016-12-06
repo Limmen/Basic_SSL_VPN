@@ -2,7 +2,7 @@
 
 /**
  * Function to interact with user through stdIn and retrieve hostname and port of remote host to establish secure
- * channel
+ * channel -- Derived from server.cpp provided by lab-TA in KTH IK2206
  *
  * @param serverName buffer to store hostname
  * @param serverPort buffer to store port
@@ -21,7 +21,7 @@ void get_server_details(char *serverName, char *serverPort) {
  * @param pipefd pipe to communicate with VPN tunnel
  * @return 0 if successful
  */
-int client_secure_channel(int pipefd[2]) {
+int client_secure_channel(int pipefd[2], pid_t ppid) {
     close(pipefd[0]); // close the read-end of the pipe
     char serverName[32];
     char serverPort[5];
@@ -163,31 +163,44 @@ int client_secure_channel(int pipefd[2]) {
     write(pipefd[1], bytestream, 48);
 
     while (1) {
-        printf("Enter 1 to generate new bytestream to establish new private key and IV with server:\n");
+        printf("Enter 1 to generate new bytestream to establish new private key and IV with server | enter 2 to exit:\n");
         printf("> ");
         int choice;
         scanf("%d", &choice);
-        /**
-         * First seeds the RNG then generates random number
-         */
-        srand((unsigned char) time(NULL));
-        int i;
-        for (i = 0; i < 48; i++) {
-            bytestream[i] = rand() % 256;
+        if(choice == 1) {
+            /**
+             * First seeds the RNG then generates random number
+             */
+            srand((unsigned char) time(NULL));
+            int i;
+            for (i = 0; i < 48; i++) {
+                bytestream[i] = rand() % 256;
+            }
+
+            /**
+             * Write the generated random number to the tunnel-process to be used for encryption
+             */
+            write(pipefd[1], bytestream, 48);
+
+            /**
+             * Send the random over the secure channel to the client
+             */
+            printf("Sending the secret to the server...");
+            err = SSL_write(ssl, bytestream, 48);
+            CHK_SSL(err);
+            printf("SUCCESS!");
         }
-
-        /**
-         * Write the generated random number to the tunnel-process to be used for encryption
-         */
-        write(pipefd[1], bytestream, 48);
-
-        /**
-         * Send the random over the secure channel to the client
-         */
-        printf("Sending the secret to the server...");
-        err = SSL_write(ssl, bytestream, 48);
-        CHK_SSL(err);
-        printf("SUCCESS!");
+        if(choice == 2){
+            SSL_free(ssl);
+            SSL_CTX_free(ctx);
+            X509_free(server_cert);
+            close(sd);
+            kill (getppid(), 9);
+            break;
+        }
+        if(choice != 1 && choice != 2){
+            printf("Invalid input \n");
+        }
     }
     close(pipefd[0]);
 }

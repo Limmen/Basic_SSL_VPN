@@ -5,3 +5,5 @@
 #include "parse_input.h"
 #include "tunnel_util.h"
 #include "util.h"
+#include <sys/prctl.h>
+#include <signal.h>

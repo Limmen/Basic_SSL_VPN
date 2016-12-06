@@ -2,12 +2,12 @@
 
 /**
  * Function for the server role in a secure channel over TLS/SSL. The channel is used for establishing keys and IV's
- * to be used for VPN-tunneling.  -- Derived from server.c provided by lab-TA in KTH IK2206
+ * to be used for VPN-tunneling.  -- Derived from server.cpp provided by lab-TA in KTH IK2206
  *
  * @param pipefd pipe to communicate with VPN tunnel
  * @return 0 if no errors
  */
-int server_secure_channel(int pipefd[2]) {
+int server_secure_channel(int pipefd[2], pid_t ppid) {
     close(pipefd[0]); // close the read-end of the pipe
     unsigned char bytestream[48]; //256 bit key + 128 bit IV to be used for AES256
     unsigned char tmpbuf[100];
@@ -193,6 +193,11 @@ int server_secure_channel(int pipefd[2]) {
         CHK_SSL(err);
         if (err == 0) {
             printf("FAILURE!\n remote end of socket closed by client.\n");
+            SSL_free(ssl);
+            SSL_CTX_free(ctx);
+            X509_free(client_cert);
+            close(listen_sd);
+            kill (getppid(), 9);
             break;
         }
         memcpy(bytestream, &tmpbuf, 48);

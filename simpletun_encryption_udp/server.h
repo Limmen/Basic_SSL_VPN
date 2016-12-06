@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
 
 #define CERTF "certs_and_keys/server.crt"
 #define KEYF "certs_and_keys/server.key"
@@ -19,5 +20,5 @@
 #define CHK_ERR(err,s) if ((err)==-1) { perror(s); exit(1); }
 #define CHK_SSL(err) if ((err)==-1) { ERR_print_errors_fp(stderr); exit(2); }
 
-int server_secure_channel(int pipefd[2]);
+int server_secure_channel(int pipefd[2], pid_t ppid);
 int verifyNumber(char *, char *);

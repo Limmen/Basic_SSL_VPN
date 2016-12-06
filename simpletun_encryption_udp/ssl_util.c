@@ -1,11 +1,23 @@
 #include "ssl_util.h"
 
+/**
+ * SSL utilities for the tunnel, functions for encrypting/decrypting/generating MACs
+ * Encrypt/Decrypt is functions are very much insipired from example at
+ * openSSL wiki: https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
+ */
+
+/**
+ * Function to initialize the SSL library for encryption/decryption
+ */
 void initializeSSL() {
     ERR_load_crypto_strings();
     OpenSSL_add_all_algorithms();
     OPENSSL_config(NULL);
 }
 
+/**
+ * Auxiliary function to print errors
+ */
 void handleErrors(void) {
     ERR_print_errors_fp(stderr);
     abort();
@@ -86,6 +98,15 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
     return plaintext_len;
 }
 
+/***
+ * Function to generate MAC for a given cipher-text with HMAC SHA256
+ *
+ * @param key key for HMAC
+ * @param key_len length of key
+ * @param cipher_text ciphertext to generate MAC from
+ * @param cipher_text_len length of ciphertex
+ * @return MAC
+ */
 unsigned char* addMAC(unsigned char *key, int key_len, unsigned char *cipher_text, int cipher_text_len){
     return HMAC(EVP_sha256(), key, key_len, cipher_text, cipher_text_len, NULL, NULL);
 }

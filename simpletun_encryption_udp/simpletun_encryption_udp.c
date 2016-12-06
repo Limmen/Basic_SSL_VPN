@@ -1,7 +1,6 @@
 /**
- * simpletun_udp.c derived from simpletun.c, to changed to use UDP instead of TCP
+ * simpletun_udp.c derived from simpletun.c (see simpletun.c for LICENSE, credit etc), to changed to use UDP instead of TCP
  */
-
 
 #include "simpletun_encryption_udp.h"
 /* buffer for reading from tun/tap interface, must be >= 1500 */
@@ -90,23 +89,34 @@ int main(int argc, char *argv[]) {
     net_fd = sock_fd;
     /* use select() to handle two descriptors at once */
     maxfd = (tap_fd > net_fd) ? tap_fd : net_fd;
+    /**
+     * Fork process to create secure channel for key exchange
+     */
     int pipefd[2];
+    pid_t ppid = getpid();
     pid_t cpid;
     pipe(pipefd); // create the pipe
     cpid = fork();
     if (input.cliserv == CLIENT) {
         if (cpid == 0) {
-            client_secure_channel(pipefd);
+            int r = prctl(PR_SET_PDEATHSIG, SIGTERM);
+            if (r == -1) { perror(0); exit(1); }
+            client_secure_channel(pipefd, ppid);
         }
     }
     if (input.cliserv == SERVER) {
         if (cpid == 0) {
-            server_secure_channel(pipefd);
+            server_secure_channel(pipefd, ppid);
+            int r = prctl(PR_SET_PDEATHSIG, SIGTERM);
+            if (r == -1) { perror(0); exit(1); }
         }
     }
     close(pipefd[1]); //close write-end of pipe
     maxfd = (pipefd[0] > maxfd) ? pipefd[0] : maxfd;
     int pipeClosed = 1;
+    /**
+     * Read data from TUN interface, Network Interface and Process handling secure channel
+     */
     while (1) {
         unsigned char buf[2000];
         int ret;
@@ -148,6 +158,8 @@ int main(int argc, char *argv[]) {
          *
          * If data comes from net_fd this program simply forwards it to the TUN/TAP interface which will put the data
          * into the OS network stack as data direct from the wire, and will eventually be delivered to the application.
+         *
+         * If data comes from pipefd[0] (read-end of pipe to secure channel), the privKey + IV will be updated
          */
         if (FD_ISSET(tap_fd, &rd_set)) {
             /* data from tun/tap: just read it and write it to the network */
@@ -174,6 +186,9 @@ int main(int argc, char *argv[]) {
                 /* Show the encrypted text */
                 //do_debug("Encrypted text is:%s\n", ciphertext);
 
+                /**
+                 * Generate MAC and prepend it to the ciphertext before sending it on the wire
+                 */
                 mac = addMAC(key, 32, ciphertext, ciphertext_len);
                 int msg_len = 32 + ciphertext_len;
                 unsigned char msg[msg_len];
@@ -216,6 +231,9 @@ int main(int argc, char *argv[]) {
             do_debug("NET2TAP %lu: Read %d bytes from the network\n", net2tap, nread);
             if (keysInitialized) {
                 int i;
+                /**
+                 * If read more than 32 bytes we expect first 32 bytes to be MAC which need to be verified.
+                 */
                 if (nread > 32) {
                     unsigned char mac_sign[32];
                     memset(mac_sign, '\0', 32);
@@ -233,7 +251,8 @@ int main(int argc, char *argv[]) {
                     unsigned char *mac_verify = addMAC(key, 32, msg, msg_len);
                     int fail = 0;
                     for (int i = 0; i < 32; i++) {
-                        if (*(mac_verify + i) != mac_sign[i]) {
+                        if (*(mac_verify + i) != mac_sign[i])
+                        {
                             fail = 1;
                             break;
                         }
