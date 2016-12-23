@@ -48,10 +48,10 @@ RM = /usr/local/clion-2016.3/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kim/workspace/c/vpn_lab
+CMAKE_SOURCE_DIR = /home/kim/workspace/c/vpn_project
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kim/workspace/c/vpn_lab/cmake-build-debug
+CMAKE_BINARY_DIR = /home/kim/workspace/c/vpn_project/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles /home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kim/workspace/c/vpn_project/cmake-build-debug/CMakeFiles /home/kim/workspace/c/vpn_project/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kim/workspace/c/vpn_lab/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kim/workspace/c/vpn_project/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,98 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named vpn_lab
+# Target rules for targets named vpnlab
 
 # Build rule for target.
-vpn_lab: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 vpn_lab
-.PHONY : vpn_lab
+vpnlab: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vpnlab
+.PHONY : vpnlab
 
 # fast build rule for target.
-vpn_lab/fast:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/build
-.PHONY : vpn_lab/fast
+vpnlab/fast:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/build
+.PHONY : vpnlab/fast
+
+simpletun_encryption_udp/client.o: simpletun_encryption_udp/client.c.o
+
+.PHONY : simpletun_encryption_udp/client.o
+
+# target to build an object file
+simpletun_encryption_udp/client.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/client.c.o
+.PHONY : simpletun_encryption_udp/client.c.o
+
+simpletun_encryption_udp/client.i: simpletun_encryption_udp/client.c.i
+
+.PHONY : simpletun_encryption_udp/client.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/client.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/client.c.i
+.PHONY : simpletun_encryption_udp/client.c.i
+
+simpletun_encryption_udp/client.s: simpletun_encryption_udp/client.c.s
+
+.PHONY : simpletun_encryption_udp/client.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/client.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/client.c.s
+.PHONY : simpletun_encryption_udp/client.c.s
+
+simpletun_encryption_udp/parse_input.o: simpletun_encryption_udp/parse_input.c.o
+
+.PHONY : simpletun_encryption_udp/parse_input.o
+
+# target to build an object file
+simpletun_encryption_udp/parse_input.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/parse_input.c.o
+.PHONY : simpletun_encryption_udp/parse_input.c.o
+
+simpletun_encryption_udp/parse_input.i: simpletun_encryption_udp/parse_input.c.i
+
+.PHONY : simpletun_encryption_udp/parse_input.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/parse_input.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/parse_input.c.i
+.PHONY : simpletun_encryption_udp/parse_input.c.i
+
+simpletun_encryption_udp/parse_input.s: simpletun_encryption_udp/parse_input.c.s
+
+.PHONY : simpletun_encryption_udp/parse_input.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/parse_input.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/parse_input.c.s
+.PHONY : simpletun_encryption_udp/parse_input.c.s
+
+simpletun_encryption_udp/server.o: simpletun_encryption_udp/server.c.o
+
+.PHONY : simpletun_encryption_udp/server.o
+
+# target to build an object file
+simpletun_encryption_udp/server.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/server.c.o
+.PHONY : simpletun_encryption_udp/server.c.o
+
+simpletun_encryption_udp/server.i: simpletun_encryption_udp/server.c.i
+
+.PHONY : simpletun_encryption_udp/server.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/server.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/server.c.i
+.PHONY : simpletun_encryption_udp/server.c.i
+
+simpletun_encryption_udp/server.s: simpletun_encryption_udp/server.c.s
+
+.PHONY : simpletun_encryption_udp/server.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/server.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/server.c.s
+.PHONY : simpletun_encryption_udp/server.c.s
 
 simpletun_encryption_udp/simpletun_encryption_udp.o: simpletun_encryption_udp/simpletun_encryption_udp.c.o
 
@@ -129,7 +210,7 @@ simpletun_encryption_udp/simpletun_encryption_udp.o: simpletun_encryption_udp/si
 
 # target to build an object file
 simpletun_encryption_udp/simpletun_encryption_udp.c.o:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.o
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.o
 .PHONY : simpletun_encryption_udp/simpletun_encryption_udp.c.o
 
 simpletun_encryption_udp/simpletun_encryption_udp.i: simpletun_encryption_udp/simpletun_encryption_udp.c.i
@@ -138,7 +219,7 @@ simpletun_encryption_udp/simpletun_encryption_udp.i: simpletun_encryption_udp/si
 
 # target to preprocess a source file
 simpletun_encryption_udp/simpletun_encryption_udp.c.i:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.i
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.i
 .PHONY : simpletun_encryption_udp/simpletun_encryption_udp.c.i
 
 simpletun_encryption_udp/simpletun_encryption_udp.s: simpletun_encryption_udp/simpletun_encryption_udp.c.s
@@ -147,8 +228,89 @@ simpletun_encryption_udp/simpletun_encryption_udp.s: simpletun_encryption_udp/si
 
 # target to generate assembly for a file
 simpletun_encryption_udp/simpletun_encryption_udp.c.s:
-	$(MAKE) -f CMakeFiles/vpn_lab.dir/build.make CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.s
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.s
 .PHONY : simpletun_encryption_udp/simpletun_encryption_udp.c.s
+
+simpletun_encryption_udp/ssl_util.o: simpletun_encryption_udp/ssl_util.c.o
+
+.PHONY : simpletun_encryption_udp/ssl_util.o
+
+# target to build an object file
+simpletun_encryption_udp/ssl_util.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/ssl_util.c.o
+.PHONY : simpletun_encryption_udp/ssl_util.c.o
+
+simpletun_encryption_udp/ssl_util.i: simpletun_encryption_udp/ssl_util.c.i
+
+.PHONY : simpletun_encryption_udp/ssl_util.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/ssl_util.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/ssl_util.c.i
+.PHONY : simpletun_encryption_udp/ssl_util.c.i
+
+simpletun_encryption_udp/ssl_util.s: simpletun_encryption_udp/ssl_util.c.s
+
+.PHONY : simpletun_encryption_udp/ssl_util.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/ssl_util.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/ssl_util.c.s
+.PHONY : simpletun_encryption_udp/ssl_util.c.s
+
+simpletun_encryption_udp/tunnel_util.o: simpletun_encryption_udp/tunnel_util.c.o
+
+.PHONY : simpletun_encryption_udp/tunnel_util.o
+
+# target to build an object file
+simpletun_encryption_udp/tunnel_util.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/tunnel_util.c.o
+.PHONY : simpletun_encryption_udp/tunnel_util.c.o
+
+simpletun_encryption_udp/tunnel_util.i: simpletun_encryption_udp/tunnel_util.c.i
+
+.PHONY : simpletun_encryption_udp/tunnel_util.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/tunnel_util.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/tunnel_util.c.i
+.PHONY : simpletun_encryption_udp/tunnel_util.c.i
+
+simpletun_encryption_udp/tunnel_util.s: simpletun_encryption_udp/tunnel_util.c.s
+
+.PHONY : simpletun_encryption_udp/tunnel_util.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/tunnel_util.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/tunnel_util.c.s
+.PHONY : simpletun_encryption_udp/tunnel_util.c.s
+
+simpletun_encryption_udp/util.o: simpletun_encryption_udp/util.c.o
+
+.PHONY : simpletun_encryption_udp/util.o
+
+# target to build an object file
+simpletun_encryption_udp/util.c.o:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/util.c.o
+.PHONY : simpletun_encryption_udp/util.c.o
+
+simpletun_encryption_udp/util.i: simpletun_encryption_udp/util.c.i
+
+.PHONY : simpletun_encryption_udp/util.i
+
+# target to preprocess a source file
+simpletun_encryption_udp/util.c.i:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/util.c.i
+.PHONY : simpletun_encryption_udp/util.c.i
+
+simpletun_encryption_udp/util.s: simpletun_encryption_udp/util.c.s
+
+.PHONY : simpletun_encryption_udp/util.s
+
+# target to generate assembly for a file
+simpletun_encryption_udp/util.c.s:
+	$(MAKE) -f CMakeFiles/vpnlab.dir/build.make CMakeFiles/vpnlab.dir/simpletun_encryption_udp/util.c.s
+.PHONY : simpletun_encryption_udp/util.c.s
 
 # Help Target
 help:
@@ -158,10 +320,28 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... vpn_lab"
+	@echo "... vpnlab"
+	@echo "... simpletun_encryption_udp/client.o"
+	@echo "... simpletun_encryption_udp/client.i"
+	@echo "... simpletun_encryption_udp/client.s"
+	@echo "... simpletun_encryption_udp/parse_input.o"
+	@echo "... simpletun_encryption_udp/parse_input.i"
+	@echo "... simpletun_encryption_udp/parse_input.s"
+	@echo "... simpletun_encryption_udp/server.o"
+	@echo "... simpletun_encryption_udp/server.i"
+	@echo "... simpletun_encryption_udp/server.s"
 	@echo "... simpletun_encryption_udp/simpletun_encryption_udp.o"
 	@echo "... simpletun_encryption_udp/simpletun_encryption_udp.i"
 	@echo "... simpletun_encryption_udp/simpletun_encryption_udp.s"
+	@echo "... simpletun_encryption_udp/ssl_util.o"
+	@echo "... simpletun_encryption_udp/ssl_util.i"
+	@echo "... simpletun_encryption_udp/ssl_util.s"
+	@echo "... simpletun_encryption_udp/tunnel_util.o"
+	@echo "... simpletun_encryption_udp/tunnel_util.i"
+	@echo "... simpletun_encryption_udp/tunnel_util.s"
+	@echo "... simpletun_encryption_udp/util.o"
+	@echo "... simpletun_encryption_udp/util.i"
+	@echo "... simpletun_encryption_udp/util.s"
 .PHONY : help
 
 

@@ -1,1 +1,0 @@
-/usr/bin/cc  -g   CMakeFiles/vpn_lab.dir/simpletun_encryption_udp/simpletun_encryption_udp.c.o  -o vpn_lab 
